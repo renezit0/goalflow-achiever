@@ -24,9 +24,13 @@ export function useAuth() {
         .select('*')
         .eq('login', loginInput)
         .eq('senha', senha)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
+      
+      if (!data) {
+        return { success: false, error: 'Usuário ou senha inválidos' };
+      }
       
       // Mapear os dados do banco para o tipo User
       const userData: User = {
