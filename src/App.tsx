@@ -55,53 +55,55 @@ function AppContent() {
 
   return (
     <BrowserRouter>
-      <div className="flex min-h-screen w-full bg-background">
-        {user && (
-          <>
-            <DashboardSidebar className={`${sidebarExpanded ? 'expanded' : ''}`} />
-            {/* Mobile overlay */}
-            <div 
-              className={`lg:hidden fixed inset-0 z-50 bg-black/50 transition-opacity duration-300 ${
-                sidebarExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'
-              }`} 
-              onClick={() => setSidebarExpanded(false)} 
-            />
-          </>
-        )}
-        
-        <main className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ${
-          user ? 'lg:ml-[70px]' : ''
-        }`}>
+      <PeriodProvider>
+        <div className="flex min-h-screen w-full bg-background">
           {user && (
-            <header className="header sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-background px-4 lg:px-6">
-              <button 
-                className="menu-toggle lg:hidden"
-                onClick={() => setSidebarExpanded(!sidebarExpanded)}
-              >
-                <i className="fas fa-bars"></i>
-              </button>
-              <div className="flex-1">
-                <h1 className="page-title text-lg font-semibold md:text-xl">Dashboard</h1>
-              </div>
-            </header>
+            <>
+              <DashboardSidebar className={`${sidebarExpanded ? 'expanded' : ''}`} />
+              {/* Mobile overlay */}
+              <div 
+                className={`lg:hidden fixed inset-0 z-50 bg-black/50 transition-opacity duration-300 ${
+                  sidebarExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                }`} 
+                onClick={() => setSidebarExpanded(false)} 
+              />
+            </>
           )}
           
-          <div className="content-area flex-1 overflow-auto">
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/vendas" element={<Vendas />} />
-              <Route path="/metas" element={<Metas />} />
-              <Route path="/metas-loja" element={<MetasLojaPage />} />
-              <Route path="/campanhas" element={<Campanhas />} />
-              <Route path="/relatorios" element={<Relatorios />} />
-              <Route path="/usuarios" element={<Usuarios />} />
-              <Route path="/configuracoes" element={<Configuracoes />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </div>
-        </main>
-      </div>
+          <main className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ${
+            user ? 'lg:ml-[70px]' : ''
+          }`}>
+            {user && (
+              <header className="header sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-background px-4 lg:px-6">
+                <button 
+                  className="menu-toggle lg:hidden"
+                  onClick={() => setSidebarExpanded(!sidebarExpanded)}
+                >
+                  <i className="fas fa-bars"></i>
+                </button>
+                <div className="flex-1">
+                  <h1 className="page-title text-lg font-semibold md:text-xl">Dashboard</h1>
+                </div>
+              </header>
+            )}
+            
+            <div className="content-area flex-1 overflow-auto">
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/vendas" element={<Vendas />} />
+                <Route path="/metas" element={<Metas />} />
+                <Route path="/metas-loja" element={<MetasLojaPage />} />
+                <Route path="/campanhas" element={<Campanhas />} />
+                <Route path="/relatorios" element={<Relatorios />} />
+                <Route path="/usuarios" element={<Usuarios />} />
+                <Route path="/configuracoes" element={<Configuracoes />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </div>
+          </main>
+        </div>
+      </PeriodProvider>
     </BrowserRouter>
   );
 }
@@ -109,11 +111,9 @@ function AppContent() {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <PeriodProvider>
-        <Toaster />
-        <Sonner />
-        <AppContent />
-      </PeriodProvider>
+      <Toaster />
+      <Sonner />
+      <AppContent />
     </TooltipProvider>
   </QueryClientProvider>
 );
