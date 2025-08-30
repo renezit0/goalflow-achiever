@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import logo from "@/assets/logo.png";
 
 interface SidebarItem {
   icon: string;
@@ -37,8 +38,8 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
       {/* Header */}
       <div className="sidebar-header flex items-center justify-center p-3 mb-3">
         <div className="sidebar-logo flex items-center">
-          <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white font-semibold">
-            <i className="fas fa-store text-sm"></i>
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden bg-white/10">
+            <img src={logo} alt="Logo" className="w-8 h-8 object-contain" />
           </div>
           <div className="logo-text ml-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <span className="text-lg font-semibold">Loja {user?.loja_id}</span>
