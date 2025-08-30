@@ -31,8 +31,9 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
 
   return (
     <div className={cn(
-      "sidebar fixed z-50 flex flex-col h-full text-white shadow-lg transition-all duration-300 ease-in-out",
+      "sidebar fixed z-50 flex flex-col h-full text-white shadow-lg transition-all duration-300 ease-in-out bg-gray-900",
       "w-[70px] hover:w-[220px] group",
+      className?.includes('expanded') ? "w-[220px]" : "",
       className
     )}>
       {/* Header */}
@@ -65,7 +66,10 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
               )}>
                 <i className={`${item.icon} text-base`}></i>
               </div>
-              <span className="nav-label ml-3 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 w-[120px] whitespace-nowrap">
+              <span className={cn(
+                "nav-label ml-3 font-medium transition-opacity duration-200 w-[120px] whitespace-nowrap",
+                className?.includes('expanded') ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+              )}>
                 {item.label}
               </span>
             </Link>
@@ -78,7 +82,10 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
         <div className="user-avatar w-10 h-10 bg-secondary rounded-full flex items-center justify-center text-white font-bold text-sm">
           {user?.nome?.charAt(0) || "U"}
         </div>
-        <div className="user-info ml-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 overflow-hidden flex-1">
+        <div className={cn(
+          "user-info ml-3 transition-opacity duration-200 overflow-hidden flex-1",
+          className?.includes('expanded') ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+        )}>
           <div className="user-name text-white font-semibold text-sm truncate">
             {user?.nome}
           </div>
@@ -90,7 +97,10 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
           variant="ghost"
           size="sm"
           onClick={logout}
-          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 ml-2 text-white hover:bg-white/10 hover:text-white"
+          className={cn(
+            "transition-opacity duration-200 ml-2 text-white hover:bg-white/10 hover:text-white",
+            className?.includes('expanded') ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+          )}
         >
           <i className="fas fa-sign-out-alt text-sm"></i>
         </Button>

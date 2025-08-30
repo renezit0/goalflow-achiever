@@ -60,13 +60,13 @@ function AppContent() {
           {user && (
             <>
               <DashboardSidebar className={`${sidebarExpanded ? 'expanded' : ''}`} />
-              {/* Mobile overlay */}
-              <div 
-                className={`lg:hidden fixed inset-0 z-50 bg-black/50 transition-opacity duration-300 ${
-                  sidebarExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'
-                }`} 
-                onClick={() => setSidebarExpanded(false)} 
-              />
+            {/* Mobile overlay */}
+            <div 
+              className={`lg:hidden fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 ${
+                sidebarExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'
+              }`} 
+              onClick={() => setSidebarExpanded(false)} 
+            />
             </>
           )}
           
