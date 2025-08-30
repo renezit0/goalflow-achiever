@@ -48,15 +48,7 @@ export type Database = {
           tipo?: Database["public"]["Enums"]["arquivo_tipo"]
           usuario_id?: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "arquivos_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       balanco_datas: {
         Row: {
@@ -179,13 +171,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "campanha_historico_alterado_por_fkey"
-            columns: ["alterado_por"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "campanha_historico_campanha_id_fkey"
             columns: ["campanha_id"]
             isOneToOne: false
@@ -232,13 +217,6 @@ export type Database = {
             columns: ["campanha_id"]
             isOneToOne: false
             referencedRelation: "campanhas"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "campanha_lancamentos_lancado_por_fkey"
-            columns: ["lancado_por"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
             referencedColumns: ["id"]
           },
           {
@@ -332,15 +310,7 @@ export type Database = {
           tipo_campanha?: Database["public"]["Enums"]["campanha_tipo"]
           valor_meta?: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "campanhas_criado_por_fkey"
-            columns: ["criado_por"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       campanhas_lojas: {
         Row: {
@@ -414,13 +384,6 @@ export type Database = {
             referencedRelation: "campanhas_lojas"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "campanhas_lojas_historico_registrado_por_fkey"
-            columns: ["registrado_por"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
         ]
       }
       config_salario: {
@@ -457,29 +420,7 @@ export type Database = {
           salario_base?: number | null
           usuario_id?: number
         }
-        Relationships: [
-          {
-            foreignKeyName: "config_salario_atualizado_por_fkey"
-            columns: ["atualizado_por"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "config_salario_criado_por_fkey"
-            columns: ["criado_por"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "config_salario_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       config_salario_tipo: {
         Row: {
@@ -515,22 +456,7 @@ export type Database = {
           salario_base?: number | null
           tipo_usuario?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "config_salario_tipo_atualizado_por_fkey"
-            columns: ["atualizado_por"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "config_salario_tipo_criado_por_fkey"
-            columns: ["criado_por"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       correcoes_ponto: {
         Row: {
@@ -578,13 +504,6 @@ export type Database = {
             columns: ["relatorio_id"]
             isOneToOne: false
             referencedRelation: "relatorios_ponto"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "correcoes_ponto_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
             referencedColumns: ["id"]
           },
         ]
@@ -657,13 +576,6 @@ export type Database = {
             columns: ["loja_id"]
             isOneToOne: false
             referencedRelation: "lojas"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "depositos_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
             referencedColumns: ["id"]
           },
         ]
@@ -763,13 +675,6 @@ export type Database = {
             referencedRelation: "lojas"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "escala_config_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
         ]
       }
       escala_feriados: {
@@ -861,13 +766,6 @@ export type Database = {
             referencedRelation: "lojas"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "escala_horario_especifico_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
         ]
       }
       escala_horarios_dia: {
@@ -907,15 +805,7 @@ export type Database = {
           updated_at?: string | null
           usuario_id?: number
         }
-        Relationships: [
-          {
-            foreignKeyName: "escala_horarios_dia_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       escala_picos: {
         Row: {
@@ -1042,22 +932,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["ferias_status"]
           usuario_id?: number
         }
-        Relationships: [
-          {
-            foreignKeyName: "ferias_aprovado_por_fkey"
-            columns: ["aprovado_por"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ferias_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       ferias_historico: {
         Row: {
@@ -1092,13 +967,6 @@ export type Database = {
             referencedRelation: "ferias"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "ferias_historico_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
         ]
       }
       folgas: {
@@ -1129,22 +997,7 @@ export type Database = {
           registrado_por?: number | null
           usuario_id?: number
         }
-        Relationships: [
-          {
-            foreignKeyName: "folgas_registrado_por_fkey"
-            columns: ["registrado_por"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "folgas_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       lastlogin: {
         Row: {
@@ -1168,15 +1021,7 @@ export type Database = {
           user_agent?: string | null
           usuario_id?: number
         }
-        Relationships: [
-          {
-            foreignKeyName: "lastlogin_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       listafun: {
         Row: {
@@ -1227,15 +1072,7 @@ export type Database = {
           user_agent?: string | null
           usuario_id?: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "log_eventos_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       lojas: {
         Row: {
@@ -1350,13 +1187,6 @@ export type Database = {
             referencedRelation: "periodos_meta"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "metas_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
         ]
       }
       metas_loja: {
@@ -1391,13 +1221,6 @@ export type Database = {
           periodo_meta_id?: number
         }
         Relationships: [
-          {
-            foreignKeyName: "metas_loja_criado_por_usuario_id_fkey"
-            columns: ["criado_por_usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "metas_loja_loja_id_fkey"
             columns: ["loja_id"]
@@ -1488,20 +1311,6 @@ export type Database = {
             referencedRelation: "lojas"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "notificacoes_usuario_destinatario_id_fkey"
-            columns: ["usuario_destinatario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "notificacoes_usuario_remetente_id_fkey"
-            columns: ["usuario_remetente_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
         ]
       }
       ocorrencias: {
@@ -1558,20 +1367,6 @@ export type Database = {
             referencedRelation: "lojas"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "ocorrencias_usuario_destino_id_fkey"
-            columns: ["usuario_destino_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ocorrencias_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
         ]
       }
       ocorrencias_historico: {
@@ -1607,13 +1402,6 @@ export type Database = {
             referencedRelation: "ocorrencias"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "ocorrencias_historico_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
         ]
       }
       ocorrencias_respostas: {
@@ -1646,13 +1434,6 @@ export type Database = {
             referencedRelation: "ocorrencias"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "ocorrencias_respostas_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
         ]
       }
       ocorrencias_visualizacoes: {
@@ -1680,13 +1461,6 @@ export type Database = {
             columns: ["ocorrencia_id"]
             isOneToOne: false
             referencedRelation: "ocorrencias"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ocorrencias_visualizacoes_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
             referencedColumns: ["id"]
           },
         ]
@@ -1807,13 +1581,6 @@ export type Database = {
             referencedRelation: "lojas"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "orcamentos_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
         ]
       }
       pdvpro: {
@@ -1906,13 +1673,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "recados_autor_id_fkey"
-            columns: ["autor_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "recados_loja_id_fkey"
             columns: ["loja_id"]
             isOneToOne: false
@@ -1948,13 +1708,6 @@ export type Database = {
             referencedRelation: "recados"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "recados_leitura_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
         ]
       }
       recados_notificacoes: {
@@ -1987,13 +1740,6 @@ export type Database = {
             referencedRelation: "recados"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "recados_notificacoes_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
         ]
       }
       recovery_tokens: {
@@ -2024,15 +1770,7 @@ export type Database = {
           usuario_id?: number
           utilizado?: boolean | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "recovery_tokens_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       registros_ponto: {
         Row: {
@@ -2126,31 +1864,10 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "relatorios_ponto_funcionario_id_fkey"
-            columns: ["funcionario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "relatorios_ponto_loja_id_fkey"
             columns: ["loja_id"]
             isOneToOne: false
             referencedRelation: "lojas"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "relatorios_ponto_usuario_analise_id_fkey"
-            columns: ["usuario_analise_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "relatorios_ponto_usuario_upload_id_fkey"
-            columns: ["usuario_upload_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
             referencedColumns: ["id"]
           },
         ]
@@ -2256,13 +1973,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "tutoriais_autor_id_fkey"
-            columns: ["autor_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "tutoriais_loja_id_fkey"
             columns: ["loja_id"]
             isOneToOne: false
@@ -2328,98 +2038,82 @@ export type Database = {
           token?: string
           usuario_id?: number
         }
-        Relationships: [
-          {
-            foreignKeyName: "user_tokens_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       usuarios: {
         Row: {
           avatar: string | null
-          cpf: string | null
+          CPF: string | null
           data_cadastro: string | null
-          data_contratacao: string
+          data_contratacao: string | null
           data_nascimento: string | null
           email: string | null
           id: number
-          login: string
-          loja_id: number
+          login: string | null
+          loja_id: number | null
           matricula: string | null
-          nome: string
-          permissao: number | null
-          porcentagem_comissao_conveniencia: number | null
-          porcentagem_comissao_dermocosmetico: number | null
-          porcentagem_comissao_generico: number | null
-          porcentagem_comissao_goodlife: number | null
-          porcentagem_comissao_perfumaria_alta: number | null
-          porcentagem_comissao_similar: number | null
-          senha: string
-          senha_provisoria: boolean | null
-          status: Database["public"]["Enums"]["user_status"] | null
-          tipo: Database["public"]["Enums"]["user_tipo"]
+          nome: string | null
+          permissao: string | null
+          porcentagem_comissao_conveniencia: string | null
+          porcentagem_comissao_dermocosmetico: string | null
+          porcentagem_comissao_generico: string | null
+          porcentagem_comissao_goodlife: string | null
+          porcentagem_comissao_perfumaria_alta: string | null
+          porcentagem_comissao_similar: string | null
+          senha: string | null
+          senha_provisoria: number | null
+          status: string | null
+          tipo: string | null
         }
         Insert: {
           avatar?: string | null
-          cpf?: string | null
+          CPF?: string | null
           data_cadastro?: string | null
-          data_contratacao: string
+          data_contratacao?: string | null
           data_nascimento?: string | null
           email?: string | null
-          id?: number
-          login: string
-          loja_id?: number
+          id: number
+          login?: string | null
+          loja_id?: number | null
           matricula?: string | null
-          nome: string
-          permissao?: number | null
-          porcentagem_comissao_conveniencia?: number | null
-          porcentagem_comissao_dermocosmetico?: number | null
-          porcentagem_comissao_generico?: number | null
-          porcentagem_comissao_goodlife?: number | null
-          porcentagem_comissao_perfumaria_alta?: number | null
-          porcentagem_comissao_similar?: number | null
-          senha: string
-          senha_provisoria?: boolean | null
-          status?: Database["public"]["Enums"]["user_status"] | null
-          tipo: Database["public"]["Enums"]["user_tipo"]
+          nome?: string | null
+          permissao?: string | null
+          porcentagem_comissao_conveniencia?: string | null
+          porcentagem_comissao_dermocosmetico?: string | null
+          porcentagem_comissao_generico?: string | null
+          porcentagem_comissao_goodlife?: string | null
+          porcentagem_comissao_perfumaria_alta?: string | null
+          porcentagem_comissao_similar?: string | null
+          senha?: string | null
+          senha_provisoria?: number | null
+          status?: string | null
+          tipo?: string | null
         }
         Update: {
           avatar?: string | null
-          cpf?: string | null
+          CPF?: string | null
           data_cadastro?: string | null
-          data_contratacao?: string
+          data_contratacao?: string | null
           data_nascimento?: string | null
           email?: string | null
           id?: number
-          login?: string
-          loja_id?: number
+          login?: string | null
+          loja_id?: number | null
           matricula?: string | null
-          nome?: string
-          permissao?: number | null
-          porcentagem_comissao_conveniencia?: number | null
-          porcentagem_comissao_dermocosmetico?: number | null
-          porcentagem_comissao_generico?: number | null
-          porcentagem_comissao_goodlife?: number | null
-          porcentagem_comissao_perfumaria_alta?: number | null
-          porcentagem_comissao_similar?: number | null
-          senha?: string
-          senha_provisoria?: boolean | null
-          status?: Database["public"]["Enums"]["user_status"] | null
-          tipo?: Database["public"]["Enums"]["user_tipo"]
+          nome?: string | null
+          permissao?: string | null
+          porcentagem_comissao_conveniencia?: string | null
+          porcentagem_comissao_dermocosmetico?: string | null
+          porcentagem_comissao_generico?: string | null
+          porcentagem_comissao_goodlife?: string | null
+          porcentagem_comissao_perfumaria_alta?: string | null
+          porcentagem_comissao_similar?: string | null
+          senha?: string | null
+          senha_provisoria?: number | null
+          status?: string | null
+          tipo?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "usuarios_loja_id_fkey"
-            columns: ["loja_id"]
-            isOneToOne: false
-            referencedRelation: "lojas"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       usuarios_recusados: {
         Row: {
@@ -2440,15 +2134,7 @@ export type Database = {
           motivo?: string | null
           usuario_id?: number
         }
-        Relationships: [
-          {
-            foreignKeyName: "usuarios_recusados_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       vendas: {
         Row: {
@@ -2484,22 +2170,7 @@ export type Database = {
           valor_comissao?: number
           valor_venda?: number
         }
-        Relationships: [
-          {
-            foreignKeyName: "vendas_registrado_por_usuario_id_fkey"
-            columns: ["registrado_por_usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vendas_usuario_id_fkey"
-            columns: ["usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       vendas_loja: {
         Row: {
@@ -2541,13 +2212,6 @@ export type Database = {
             columns: ["loja_id"]
             isOneToOne: false
             referencedRelation: "lojas"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vendas_loja_registrado_por_usuario_id_fkey"
-            columns: ["registrado_por_usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
             referencedColumns: ["id"]
           },
         ]
