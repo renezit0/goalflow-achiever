@@ -64,29 +64,6 @@ function DashboardContent() {
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { icon: "fas fa-users", label: "Colaboradores", color: "bg-blue-500", count: "12" },
-          { icon: "fas fa-shopping-cart", label: "Vendas Hoje", color: "bg-green-500", count: "8" },
-          { icon: "fas fa-bullseye", label: "Metas Ativas", color: "bg-orange-500", count: "5" },
-          { icon: "fas fa-trophy", label: "Conquistas", color: "bg-purple-500", count: "3" }
-        ].map((item, index) => (
-          <div key={index} className="group relative overflow-hidden rounded-xl bg-card border border-border p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-            <div className="flex items-center justify-between">
-              <div className={`w-12 h-12 ${item.color} rounded-lg flex items-center justify-center text-white shadow-lg`}>
-                <i className={`${item.icon} text-lg`}></i>
-              </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold text-foreground">{item.count}</div>
-                <div className="text-sm text-muted-foreground">{item.label}</div>
-              </div>
-            </div>
-            <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          </div>
-        ))}
-      </div>
-
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
         {loading ? (
@@ -124,25 +101,24 @@ function DashboardContent() {
       {/* Enhanced Performance Summary */}
       <div className="grid md:grid-cols-2 gap-8">
         {/* Revenue Card */}
-        <div className="group relative overflow-hidden rounded-2xl bg-card border border-border shadow-sm hover:shadow-xl transition-all duration-500">
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900/5 via-transparent to-yellow-500/10"></div>
-          <div className="relative p-8">
+        <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 shadow-sm hover:shadow-xl transition-all duration-500">
+          <div className="p-8">
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-gray-900 to-black rounded-2xl flex items-center justify-center shadow-lg">
-                <i className="fas fa-coins text-2xl text-yellow-300"></i>
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <i className="fas fa-coins text-2xl text-white"></i>
               </div>
               <div>
-                <h3 className="text-xl font-bold text-foreground">Comissões Totais</h3>
-                <p className="text-muted-foreground">Performance atual</p>
+                <h3 className="text-xl font-bold text-blue-900">Comissões Totais</h3>
+                <p className="text-blue-700">Performance atual</p>
               </div>
             </div>
             
             <div className="space-y-6">
               <div>
-                <div className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-yellow-500 bg-clip-text text-transparent mb-2">
+                <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-2">
                   R$ 1.252,28
                 </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2 text-sm text-blue-700">
                   <i className="fas fa-trending-up text-green-500"></i>
                   <span>40% no período</span>
                 </div>
@@ -150,12 +126,12 @@ function DashboardContent() {
               
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Progresso da meta</span>
-                  <span className="font-semibold text-foreground">40%</span>
+                  <span className="text-blue-700">Progresso da meta</span>
+                  <span className="font-semibold text-blue-900">40%</span>
                 </div>
                 <div className="progress-modern">
                   <div 
-                    className="progress-fill bg-gradient-to-r from-gray-900 to-yellow-500" 
+                    className="progress-fill bg-gradient-to-r from-blue-500 to-blue-600" 
                     style={{ width: '40%' }}
                   ></div>
                 </div>
@@ -166,40 +142,40 @@ function DashboardContent() {
 
         {/* Status Overview */}
         <div className="space-y-4">
-          <div className="rounded-xl bg-gradient-to-r from-green-500/10 to-green-600/10 border border-green-200 p-6 group hover:shadow-lg transition-all duration-300">
+          <div className="rounded-xl bg-gradient-to-r from-green-50 to-green-100 border border-green-200 p-6 group hover:shadow-lg transition-all duration-300">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center text-white">
                 <i className="fas fa-check-circle text-lg"></i>
               </div>
               <div className="flex-1">
-                <div className="text-lg font-bold text-green-700">R$ 500,00</div>
-                <div className="text-sm text-green-600">Conquistado</div>
+                <div className="text-lg font-bold text-green-800">R$ 500,00</div>
+                <div className="text-sm text-green-700">Conquistado</div>
               </div>
               <i className="fas fa-arrow-trend-up text-green-500 text-xl group-hover:scale-110 transition-transform"></i>
             </div>
           </div>
           
-          <div className="rounded-xl bg-gradient-to-r from-orange-500/10 to-orange-600/10 border border-orange-200 p-6 group hover:shadow-lg transition-all duration-300">
+          <div className="rounded-xl bg-gradient-to-r from-orange-50 to-orange-100 border border-orange-200 p-6 group hover:shadow-lg transition-all duration-300">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center text-white">
                 <i className="fas fa-clock text-lg"></i>
               </div>
               <div className="flex-1">
-                <div className="text-lg font-bold text-orange-700">R$ 752,28</div>
-                <div className="text-sm text-orange-600">Pendente</div>
+                <div className="text-lg font-bold text-orange-800">R$ 752,28</div>
+                <div className="text-sm text-orange-700">Pendente</div>
               </div>
               <i className="fas fa-hourglass-half text-orange-500 text-xl group-hover:scale-110 transition-transform"></i>
             </div>
           </div>
           
-          <div className="rounded-xl bg-gradient-to-r from-blue-500/10 to-blue-600/10 border border-blue-200 p-6 group hover:shadow-lg transition-all duration-300">
+          <div className="rounded-xl bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 p-6 group hover:shadow-lg transition-all duration-300">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center text-white">
                 <i className="fas fa-users text-lg"></i>
               </div>
               <div className="flex-1">
-                <div className="text-lg font-bold text-blue-700">4/10</div>
-                <div className="text-sm text-blue-600">Colaboradores ativos</div>
+                <div className="text-lg font-bold text-blue-800">4/10</div>
+                <div className="text-sm text-blue-700">Colaboradores ativos</div>
               </div>
               <i className="fas fa-user-friends text-blue-500 text-xl group-hover:scale-110 transition-transform"></i>
             </div>
