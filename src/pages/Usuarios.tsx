@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Search, Plus, Edit, Trash2 } from 'lucide-react';
@@ -25,6 +25,7 @@ interface Usuario {
   matricula: string | null;
   email: string | null;
   data_contratacao: string;
+  avatar?: string; // URL do avatar do usuário
 }
 
 export default function Usuarios() {
@@ -34,6 +35,7 @@ export default function Usuarios() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('ativo'); // Por padrão mostrar apenas ativos
   const [tipoFilter, setTipoFilter] = useState<string>('all');
+  const [avatars, setAvatars] = useState<Record<number, string>>({});
 
   // useEffect must be called before any early returns
   useEffect(() => {
@@ -41,6 +43,37 @@ export default function Usuarios() {
       fetchUsuarios();
     }
   }, [user]);
+
+  const fetchUserAvatar = async (userId: number): Promise<string | null> => {
+    try {
+      const response = await fetch(`https://onev2.seellbr.com/uploads/avatars/user_${userId}_current.txt`);
+      if (response.ok) {
+        const avatarPath = await response.text();
+        return `https://onev2.seellbr.com/${avatarPath.trim()}`;
+      }
+    } catch (error) {
+      console.log(`Avatar não encontrado para usuário ${userId}`);
+    }
+    return null;
+  };
+
+  const fetchAvatars = async (usuariosList: Usuario[]) => {
+    const avatarPromises = usuariosList.map(async (usuario) => {
+      const avatarUrl = await fetchUserAvatar(usuario.id);
+      return { id: usuario.id, avatarUrl };
+    });
+
+    const avatarResults = await Promise.all(avatarPromises);
+    const avatarMap: Record<number, string> = {};
+    
+    avatarResults.forEach(({ id, avatarUrl }) => {
+      if (avatarUrl) {
+        avatarMap[id] = avatarUrl;
+      }
+    });
+
+    setAvatars(avatarMap);
+  };
 
   const fetchUsuarios = async () => {
     try {
@@ -60,6 +93,9 @@ export default function Usuarios() {
       }));
       
       setUsuarios(mappedUsuarios);
+      
+      // Buscar avatares após carregar usuários
+      await fetchAvatars(mappedUsuarios);
     } catch (error) {
       console.error('Erro ao buscar usuários:', error);
       toast.error('Erro ao carregar usuários');
@@ -216,6 +252,13 @@ export default function Usuarios() {
                     <div className="flex items-start justify-between">
                       <div className="flex items-center space-x-3">
                         <Avatar className="w-10 h-10">
+                          {avatars[usuario.id] ? (
+                            <AvatarImage 
+                              src={avatars[usuario.id]} 
+                              alt={`Avatar de ${usuario.nome}`}
+                              className="object-cover"
+                            />
+                          ) : null}
                           <AvatarFallback className="text-sm">
                             {usuario.nome.charAt(0).toUpperCase()}
                           </AvatarFallback>
@@ -283,6 +326,13 @@ export default function Usuarios() {
                         <TableCell>
                           <div className="flex items-center space-x-3">
                             <Avatar className="w-8 h-8">
+                              {avatars[usuario.id] ? (
+                                <AvatarImage 
+                                  src={avatars[usuario.id]} 
+                                  alt={`Avatar de ${usuario.nome}`}
+                                  className="object-cover"
+                                />
+                              ) : null}
                               <AvatarFallback className="text-xs">
                                 {usuario.nome.charAt(0).toUpperCase()}
                               </AvatarFallback>
