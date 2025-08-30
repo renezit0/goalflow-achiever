@@ -4,13 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { useDashboardData } from "@/hooks/useDashboardData";
-import { usePeriodoAtual } from "@/hooks/usePeriodoAtual";
+import { PeriodProvider, usePeriodContext } from "@/contexts/PeriodContext";
 import { Navigate } from "react-router-dom";
 
-export function Dashboard() {
+function DashboardContent() {
   const { user, loading: authLoading } = useAuth();
-  const { metrics, loading } = useDashboardData(user);
-  const periodo = usePeriodoAtual();
+  const { selectedPeriod } = usePeriodContext();
+  const { metrics, loading } = useDashboardData(user, selectedPeriod);
 
   if (authLoading) {
     return (
@@ -34,7 +34,6 @@ export function Dashboard() {
     <div className="p-6 space-y-8 bg-gradient-to-br from-background via-muted/5 to-accent/5 min-h-screen">
       {/* Modern Hero Section */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-gray-900 via-black to-yellow-500 p-8 text-white shadow-2xl">
-        <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative z-10">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-3">
@@ -49,6 +48,11 @@ export function Dashboard() {
               </div>
               <p className="text-lg text-white/90 max-w-lg">
                 Acompanhe suas metas, vendas e performance em tempo real
+                {selectedPeriod && (
+                  <span className="block text-sm text-white/70 mt-1">
+                    Período: {selectedPeriod.label}
+                  </span>
+                )}
               </p>
             </div>
             
@@ -214,5 +218,13 @@ export function Dashboard() {
         </div>
       </div>
     </div>
+  );
+}
+
+export function Dashboard() {
+  return (
+    <PeriodProvider>
+      <DashboardContent />
+    </PeriodProvider>
   );
 }

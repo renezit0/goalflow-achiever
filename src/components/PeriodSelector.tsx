@@ -9,19 +9,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
-
-interface PeriodOption {
-  id: number;
-  label: string;
-  startDate: Date;
-  endDate: Date;
-  status: 'current' | 'past' | 'future';
-  description?: string;
-}
+import { usePeriodContext, type PeriodOption } from "@/contexts/PeriodContext";
 
 export function PeriodSelector() {
+  const { selectedPeriod, setSelectedPeriod } = usePeriodContext();
   const [periods, setPeriods] = useState<PeriodOption[]>([]);
-  const [selectedPeriod, setSelectedPeriod] = useState<PeriodOption | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -73,16 +65,22 @@ export function PeriodSelector() {
 
       setPeriods(processedPeriods);
       
-      // Selecionar período atual por padrão
-      const currentPeriod = processedPeriods.find(p => p.status === 'current') || processedPeriods[0];
-      if (currentPeriod) {
-        setSelectedPeriod(currentPeriod);
+      // Selecionar período atual por padrão se nenhum estiver selecionado
+      if (!selectedPeriod) {
+        const currentPeriod = processedPeriods.find(p => p.status === 'current') || processedPeriods[0];
+        if (currentPeriod) {
+          setSelectedPeriod(currentPeriod);
+        }
       }
     } catch (error) {
       console.error('Erro ao buscar períodos:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePeriodSelect = (period: PeriodOption) => {
+    setSelectedPeriod(period);
   };
 
   if (loading) {
@@ -113,7 +111,7 @@ export function PeriodSelector() {
         {periods.map((period) => (
           <DropdownMenuItem
             key={period.id}
-            onClick={() => setSelectedPeriod(period)}
+            onClick={() => handlePeriodSelect(period)}
             className="flex items-center justify-between py-3 px-4 hover:bg-accent hover:text-accent-foreground cursor-pointer rounded-sm"
           >
             <div className="flex flex-col">

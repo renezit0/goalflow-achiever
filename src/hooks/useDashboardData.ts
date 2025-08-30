@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { User } from './useAuth';
-import { usePeriodoAtual } from './usePeriodoAtual';
+import { type PeriodOption } from '@/contexts/PeriodContext';
 
 export interface MetricData {
   title: string;
@@ -12,53 +12,34 @@ export interface MetricData {
   status: 'pendente' | 'atingido' | 'acima';
 }
 
-export function useDashboardData(user: User | null) {
+export function useDashboardData(user: User | null, selectedPeriod?: PeriodOption | null) {
   const [metrics, setMetrics] = useState<MetricData[]>([]);
   const [loading, setLoading] = useState(true);
-  const periodo = usePeriodoAtual();
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || !selectedPeriod) {
+      setLoading(false);
+      return;
+    }
 
     const fetchDashboardData = async () => {
       try {
-        // Buscar período atual
-        const { data: periodos, error: periodosError } = await supabase
-          .from('periodos_meta')
-          .select('*')
-          .lte('data_inicio', periodo.dataFim.toISOString().split('T')[0])
-          .gte('data_fim', periodo.dataInicio.toISOString().split('T')[0])
-          .eq('status', 'ativo')
-          .limit(1);
-
-        if (periodosError) {
-          console.error('Erro ao buscar períodos:', periodosError);
-          setLoading(false);
-          return;
-        }
-
-        if (!periodos || periodos.length === 0) {
-          console.log('Período atual não encontrado');
-          setLoading(false);
-          return;
-        }
-
-        const periodoAtual = periodos[0];
-
-        // Buscar metas da loja atual
+        setLoading(true);
+        
+        // Buscar metas da loja atual para o período selecionado
         const { data: metasLoja } = await supabase
           .from('metas_loja')
           .select('*, metas_loja_categorias(*)')
           .eq('loja_id', user.loja_id)
-          .eq('periodo_meta_id', periodoAtual.id);
+          .eq('periodo_meta_id', selectedPeriod.id);
 
-        // Buscar vendas da loja atual no período
+        // Buscar vendas da loja atual no período selecionado
         const { data: vendasLoja } = await supabase
           .from('vendas_loja')
           .select('*')
           .eq('loja_id', user.loja_id)
-          .gte('data_venda', periodo.dataInicio.toISOString().split('T')[0])
-          .lte('data_venda', periodo.dataFim.toISOString().split('T')[0]);
+          .gte('data_venda', selectedPeriod.startDate.toISOString().split('T')[0])
+          .lte('data_venda', selectedPeriod.endDate.toISOString().split('T')[0]);
 
         // Processar dados para métricas
         const processedMetrics: MetricData[] = [];
@@ -73,10 +54,18 @@ export function useDashboardData(user: User | null) {
         ];
 
         for (const categoria of categorias) {
-          // Buscar meta da categoria
-          const metaCategoria = metasLoja?.[0]?.metas_loja_categorias?.find(
-            (m: any) => m.categoria === categoria.id
-          );
+          let metaValor = 0;
+          
+          if (categoria.id === 'geral') {
+            // Para categoria geral, usar meta_valor_total da metas_loja
+            metaValor = metasLoja?.[0]?.meta_valor_total || 0;
+          } else {
+            // Para outras categorias, buscar na metas_loja_categorias
+            const metaCategoria = metasLoja?.[0]?.metas_loja_categorias?.find(
+              (m: any) => m.categoria === categoria.id
+            );
+            metaValor = metaCategoria?.meta_valor || 0;
+          }
 
           // Somar vendas da categoria
           const vendasCategoria = vendasLoja?.filter(
@@ -84,7 +73,6 @@ export function useDashboardData(user: User | null) {
           ) || [];
           
           const totalVendido = vendasCategoria.reduce((sum: number, v: any) => sum + Number(v.valor_venda), 0);
-          const metaValor = metaCategoria?.meta_valor || 0;
           const faltante = Math.max(0, metaValor - totalVendido);
           
           let status: 'pendente' | 'atingido' | 'acima' = 'pendente';
@@ -114,7 +102,7 @@ export function useDashboardData(user: User | null) {
     };
 
     fetchDashboardData();
-  }, [user, periodo]);
+  }, [user, selectedPeriod]);
 
   return { metrics, loading };
 }
