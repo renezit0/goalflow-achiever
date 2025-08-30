@@ -35,9 +35,9 @@ export function useAuth() {
         login: data.login,
         tipo: data.tipo,
         loja_id: data.loja_id,
-        permissao: data.permissao,
+        permissao: Number(data.permissao) || 0,
         status: 'ativo',
-        cpf: data.cpf,
+        cpf: data.CPF || null, // Nota: banco usa 'CPF' maiúsculo
         matricula: data.matricula
       };
       

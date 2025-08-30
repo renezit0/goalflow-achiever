@@ -162,177 +162,169 @@ export default function MetasLojaPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="p-4 sm:p-6">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-          <div className="mb-4 sm:mb-0">
-            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-              📊 Metas da Loja
-            </h1>
-            <div className="text-sm text-muted-foreground mt-1">
-              <span className="font-medium">{user.loja_id} - LOJA</span>
-              <br />
-              <span>Período: {periodo.label}</span>
-              <br />
-              <span>Região: Centro (domingos não contam como dias úteis)</span>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            <Button 
-              onClick={fetchMetas}
-              variant="default" 
-              size="sm"
-              className="bg-success hover:bg-success/90 text-success-foreground"
-            >
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Atualizar Hoje
-            </Button>
-            
-            <Button variant="outline" size="sm">
-              <Calendar className="w-4 h-4 mr-2" />
-              Dia Específico
-            </Button>
-            
-            <PeriodSelector />
-            
-            <Button variant="outline" size="sm" className="hidden md:flex">
-              <BarChart3 className="w-4 h-4 mr-2" />
-              Comparativo
-            </Button>
-            
-            <Button 
-              variant="default" 
-              size="sm"
-              className="bg-warning hover:bg-warning/90 text-warning-foreground"
-            >
-              <Share2 className="w-4 h-4 mr-2" />
-              Compartilhar
-            </Button>
-          </div>
+      <div className="flex">
+        {/* Desktop Sidebar */}
+        <div className="hidden lg:flex w-64 min-h-screen border-r border-border">
+          <DashboardSidebar />
         </div>
 
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Carregando metas...</p>
-          </div>
-        ) : (
-          <>
-            {/* Status do Período */}
-            <div className="mb-6 flex items-center justify-end">
-              <div className="text-right">
-                <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20">
-                  Status: Em Andamento
-                </Badge>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Tempo: 29.6% decorrido
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {new Date().toLocaleDateString('pt-BR')} 23:40:09
-                </p>
+        {/* Main Content */}
+        <div className="flex-1">
+          {/* Header */}
+          <header className="bg-card border-b border-border p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <MobileSidebar />
+                <div>
+                  <h1 className="text-xl font-semibold text-foreground">
+                    📊 Metas da Loja {user.loja_id}
+                  </h1>
+                  <p className="text-sm text-muted-foreground">
+                    Acompanhe o desempenho das metas por categoria
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <PeriodSelector />
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={handleLogout}
+                  className="text-destructive hover:text-destructive"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sair
+                </Button>
               </div>
             </div>
+          </header>
 
-            {/* Detalhes por Categoria */}
-            <div className="mb-8">
-              <h2 className="text-lg font-semibold text-foreground mb-4 border-b-2 border-border pb-2">
-                Detalhes por Categoria
-              </h2>
+          {/* Content */}
+          <main className="p-4 sm:p-6">
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                <p className="text-muted-foreground">Carregando metas...</p>
+              </div>
+            ) : (
+              <>
+                {/* Status do Período */}
+                <div className="mb-6 flex items-center justify-end">
+                  <div className="text-right">
+                    <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20">
+                      Status: Em Andamento
+                    </Badge>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Tempo: 29.6% decorrido
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {new Date().toLocaleDateString('pt-BR')} 23:40:09
+                    </p>
+                  </div>
+                </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                {metas.map((meta, index) => (
-                  <Card key={index} className="border-border">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="flex items-center justify-between text-base">
-                        <div className="flex items-center gap-2">
-                          <span className="text-lg">{meta.icon}</span>
-                          <span>{meta.nome}</span>
-                        </div>
-                        {meta.categoria === 'geral' && (
-                          <Badge variant="outline" className="text-xs">
-                            Hoje
-                          </Badge>
-                        )}
-                      </CardTitle>
-                    </CardHeader>
-                    
-                    <CardContent className="space-y-4">
-                      {meta.meta === 0 ? (
-                        <div className="text-center py-4">
-                          <p className="text-muted-foreground text-sm">
-                            {meta.categoria === 'geral' 
-                              ? "Dados de Self Checkout não disponíveis para esta data." 
-                              : "Meta não definida para esta categoria."
-                            }
-                          </p>
-                          {meta.categoria === 'geral' && (
-                            <p className="text-xs text-muted-foreground mt-2">
-                              O módulo Self Checkout está disponível em "Self Checkout" no menu.
-                            </p>
-                          )}
-                        </div>
-                      ) : (
-                        <>
-                          <div className="space-y-2">
-                            <div className="flex justify-between text-sm">
-                              <span className="text-muted-foreground">Meta:</span>
-                              <span className="font-medium">{formatCurrency(meta.meta)}</span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                              <span className="text-muted-foreground">Realizado:</span>
-                              <span className="font-medium text-primary">{formatCurrency(meta.realizado)}</span>
-                            </div>
-                          </div>
+                {/* Detalhes por Categoria */}
+                <div className="mb-8">
+                  <h2 className="text-lg font-semibold text-foreground mb-4 border-b-2 border-border pb-2">
+                    Detalhes por Categoria
+                  </h2>
 
-                          <div className="space-y-2">
-                            <div className="flex justify-between text-sm">
-                              <span className="text-muted-foreground">Progresso:</span>
-                              <span className="font-medium">{meta.progresso.toFixed(1)}%</span>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {metas.map((meta, index) => (
+                      <Card key={index} className="border-border">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="flex items-center justify-between text-base">
+                            <div className="flex items-center gap-2">
+                              <span className="text-lg">{meta.icon}</span>
+                              <span>{meta.nome}</span>
                             </div>
-                            <Progress 
-                              value={meta.progresso} 
-                              className="h-2"
-                            />
-                          </div>
-
-                          <div className="space-y-2">
-                            <div className="flex justify-between text-sm">
-                              <span className="text-muted-foreground">Restante:</span>
-                              <span className="font-medium">{formatCurrency(meta.restante)}</span>
+                            {meta.categoria === 'geral' && (
+                              <Badge variant="outline" className="text-xs">
+                                Hoje
+                              </Badge>
+                            )}
+                          </CardTitle>
+                        </CardHeader>
+                        
+                        <CardContent className="space-y-4">
+                          {meta.meta === 0 ? (
+                            <div className="text-center py-4">
+                              <p className="text-muted-foreground text-sm">
+                                {meta.categoria === 'geral' 
+                                  ? "Dados de Self Checkout não disponíveis para esta data." 
+                                  : "Meta não definida para esta categoria."
+                                }
+                              </p>
+                              {meta.categoria === 'geral' && (
+                                <p className="text-xs text-muted-foreground mt-2">
+                                  O módulo Self Checkout está disponível em "Self Checkout" no menu.
+                                </p>
+                              )}
                             </div>
-                            <div className="flex justify-between text-sm">
-                              <span className="text-muted-foreground">Meta Diária:</span>
-                              <span className="font-medium">{formatCurrency(meta.metaDiaria)}/dia</span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                              <span className="text-muted-foreground">Média Realizada:</span>
-                              <span className="font-medium flex items-center gap-1">
-                                {formatCurrency(meta.mediaRealizada)}/dia
-                                {meta.mediaRealizada < meta.metaDiaria && (
-                                  <AlertTriangle className="w-3 h-3 text-warning" />
-                                )}
-                              </span>
-                            </div>
-                          </div>
-
-                          {meta.realizado < meta.meta && (
-                            <div className="bg-warning/10 border border-warning/20 rounded-lg p-3">
-                              <div className="flex items-center gap-2 text-warning text-sm">
-                                <AlertTriangle className="w-4 h-4" />
-                                Faltam {formatCurrency(meta.restante)} para a meta diária
+                          ) : (
+                            <>
+                              <div className="space-y-2">
+                                <div className="flex justify-between text-sm">
+                                  <span className="text-muted-foreground">Meta:</span>
+                                  <span className="font-medium">{formatCurrency(meta.meta)}</span>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                  <span className="text-muted-foreground">Realizado:</span>
+                                  <span className="font-medium text-primary">{formatCurrency(meta.realizado)}</span>
+                                </div>
                               </div>
-                            </div>
+
+                              <div className="space-y-2">
+                                <div className="flex justify-between text-sm">
+                                  <span className="text-muted-foreground">Progresso:</span>
+                                  <span className="font-medium">{meta.progresso.toFixed(1)}%</span>
+                                </div>
+                                <Progress 
+                                  value={meta.progresso} 
+                                  className="h-2"
+                                />
+                              </div>
+
+                              <div className="space-y-2">
+                                <div className="flex justify-between text-sm">
+                                  <span className="text-muted-foreground">Restante:</span>
+                                  <span className="font-medium">{formatCurrency(meta.restante)}</span>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                  <span className="text-muted-foreground">Meta Diária:</span>
+                                  <span className="font-medium">{formatCurrency(meta.metaDiaria)}/dia</span>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                  <span className="text-muted-foreground">Média Realizada:</span>
+                                  <span className="font-medium flex items-center gap-1">
+                                    {formatCurrency(meta.mediaRealizada)}/dia
+                                    {meta.mediaRealizada < meta.metaDiaria && (
+                                      <AlertTriangle className="w-3 h-3 text-warning" />
+                                    )}
+                                  </span>
+                                </div>
+                              </div>
+
+                              {meta.realizado < meta.meta && (
+                                <div className="bg-warning/10 border border-warning/20 rounded-lg p-3">
+                                  <div className="flex items-center gap-2 text-warning text-sm">
+                                    <AlertTriangle className="w-4 h-4" />
+                                    Faltam {formatCurrency(meta.restante)} para a meta diária
+                                  </div>
+                                </div>
+                              )}
+                            </>
                           )}
-                        </>
-                      )}
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </>
-        )}
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
+          </main>
+        </div>
       </div>
     </div>
   );

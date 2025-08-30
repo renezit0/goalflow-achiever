@@ -22,7 +22,7 @@ interface Usuario {
   loja_id: number;
   permissao: number | null;
   status: string | null;
-  cpf: string | null;
+  CPF: string | null; // Corresponde ao nome da coluna no banco
   matricula: string | null;
   email: string | null;
   data_contratacao: string;
@@ -58,7 +58,15 @@ export default function Usuarios() {
         .order('nome');
 
       if (error) throw error;
-      setUsuarios(data || []);
+      
+      // Mapear os dados para o tipo correto
+      const mappedUsuarios = (data || []).map(user => ({
+        ...user,
+        permissao: Number(user.permissao) || 0,
+        CPF: user.CPF || null
+      }));
+      
+      setUsuarios(mappedUsuarios);
     } catch (error) {
       console.error('Erro ao buscar usuários:', error);
       toast.error('Erro ao carregar usuários');
