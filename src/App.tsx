@@ -4,9 +4,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { DashboardSidebar } from "./components/DashboardSidebar";
-import { MobileSidebar } from "./components/MobileSidebar";
 import { useState, useEffect } from "react";
 import { useAuth } from "./hooks/useAuth";
+import { useUserTheme } from "./hooks/useUserTheme";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Vendas from "./pages/Vendas";
@@ -23,6 +23,9 @@ const queryClient = new QueryClient();
 function AppContent() {
   const { user } = useAuth();
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  
+  // Apply user theme
+  useUserTheme();
 
   // Handle sidebar responsive behavior
   useEffect(() => {
@@ -82,7 +85,7 @@ function AppContent() {
             </header>
           )}
           
-          <div className="content-area flex-1 p-4 lg:p-6">
+          <div className="content-area flex-1 overflow-auto">
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/login" element={<Login />} />
