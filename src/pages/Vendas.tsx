@@ -36,31 +36,12 @@ export default function Vendas() {
   const [categoriaFilter, setCategoriaFilter] = useState<string>('all');
   const [periodoFilter, setPeriodoFilter] = useState<string>('hoje');
 
-  // Show loading while authentication is being checked
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Verificando autenticação...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Redirect to login if not authenticated
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
+  // useEffect must be called before any early returns
   useEffect(() => {
-    fetchVendas();
-  }, [periodoFilter]);
+    if (user) {
+      fetchVendas();
+    }
+  }, [periodoFilter, user]);
 
   const fetchVendas = async () => {
     try {
@@ -95,6 +76,28 @@ export default function Vendas() {
       setLoading(false);
     }
   };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  // Show loading while authentication is being checked
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Verificando autenticação...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect to login if not authenticated
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
   const filteredVendas = vendas.filter(venda => {
     const matchesSearch = venda.categoria.toLowerCase().includes(searchTerm.toLowerCase());

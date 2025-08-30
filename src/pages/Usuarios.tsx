@@ -37,31 +37,17 @@ export default function Usuarios() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [tipoFilter, setTipoFilter] = useState<string>('all');
 
+  // useEffect must be called before any early returns
+  useEffect(() => {
+    if (user) {
+      fetchUsuarios();
+    }
+  }, [user]);
+
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
-
-  // Show loading while authentication is being checked
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Verificando autenticação...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Redirect to login if not authenticated
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-
-  useEffect(() => {
-    fetchUsuarios();
-  }, []);
 
   const fetchUsuarios = async () => {
     try {
@@ -88,6 +74,23 @@ export default function Usuarios() {
       setLoading(false);
     }
   };
+
+  // Show loading while authentication is being checked
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Verificando autenticação...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect to login if not authenticated
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
   const filteredUsuarios = usuarios.filter(usuario => {
     const matchesSearch = usuario.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
