@@ -14,62 +14,1332 @@ export type Database = {
   }
   public: {
     Tables: {
-      lojas: {
+      arquivos: {
+        Row: {
+          caminho: string
+          data_upload: string | null
+          id: number
+          mime_type: string
+          nome_arquivo: string
+          status: string | null
+          tamanho: number
+          tipo: Database["public"]["Enums"]["arquivo_tipo"]
+          usuario_id: number | null
+        }
+        Insert: {
+          caminho: string
+          data_upload?: string | null
+          id?: number
+          mime_type: string
+          nome_arquivo: string
+          status?: string | null
+          tamanho: number
+          tipo?: Database["public"]["Enums"]["arquivo_tipo"]
+          usuario_id?: number | null
+        }
+        Update: {
+          caminho?: string
+          data_upload?: string | null
+          id?: number
+          mime_type?: string
+          nome_arquivo?: string
+          status?: string | null
+          tamanho?: number
+          tipo?: Database["public"]["Enums"]["arquivo_tipo"]
+          usuario_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "arquivos_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      balanco_datas: {
         Row: {
           created_at: string | null
-          endereco: string | null
+          data_balanco: string
           id: number
-          nome: string
-          status: string | null
-          telefone: string | null
+          loja_id: number
+          observacao: string | null
+          tipo_balanco: string
           updated_at: string | null
         }
         Insert: {
           created_at?: string | null
-          endereco?: string | null
+          data_balanco: string
           id?: number
-          nome: string
-          status?: string | null
-          telefone?: string | null
+          loja_id: number
+          observacao?: string | null
+          tipo_balanco: string
           updated_at?: string | null
         }
         Update: {
           created_at?: string | null
-          endereco?: string | null
+          data_balanco?: string
+          id?: number
+          loja_id?: number
+          observacao?: string | null
+          tipo_balanco?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "balanco_datas_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bancos: {
+        Row: {
+          data_atualizacao: string | null
+          data_criacao: string | null
+          id: number
+          nome: string
+          status: Database["public"]["Enums"]["banco_status"] | null
+        }
+        Insert: {
+          data_atualizacao?: string | null
+          data_criacao?: string | null
+          id?: number
+          nome: string
+          status?: Database["public"]["Enums"]["banco_status"] | null
+        }
+        Update: {
+          data_atualizacao?: string | null
+          data_criacao?: string | null
           id?: number
           nome?: string
-          status?: string | null
-          telefone?: string | null
-          updated_at?: string | null
+          status?: Database["public"]["Enums"]["banco_status"] | null
         }
         Relationships: []
       }
-      metas: {
+      campanha_config: {
         Row: {
-          categoria: string
+          campanha_id: number
+          chave: string
+          id: number
+          valor: string | null
+        }
+        Insert: {
+          campanha_id: number
+          chave: string
+          id?: number
+          valor?: string | null
+        }
+        Update: {
+          campanha_id?: number
+          chave?: string
+          id?: number
+          valor?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campanha_config_campanha_id_fkey"
+            columns: ["campanha_id"]
+            isOneToOne: false
+            referencedRelation: "campanhas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campanha_historico: {
+        Row: {
+          alterado_por: number
+          campanha_id: number
+          data_alteracao: string | null
+          id: number
+          loja_id: number
+          valor_anterior: number | null
+          valor_novo: number
+        }
+        Insert: {
+          alterado_por: number
+          campanha_id: number
+          data_alteracao?: string | null
+          id?: number
+          loja_id: number
+          valor_anterior?: number | null
+          valor_novo: number
+        }
+        Update: {
+          alterado_por?: number
+          campanha_id?: number
+          data_alteracao?: string | null
+          id?: number
+          loja_id?: number
+          valor_anterior?: number | null
+          valor_novo?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campanha_historico_alterado_por_fkey"
+            columns: ["alterado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campanha_historico_campanha_id_fkey"
+            columns: ["campanha_id"]
+            isOneToOne: false
+            referencedRelation: "campanhas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campanha_historico_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campanha_lancamentos: {
+        Row: {
+          campanha_id: number
+          data_lancamento: string | null
+          id: number
+          lancado_por: number
+          loja_id: number
+          valor_realizado: number
+        }
+        Insert: {
+          campanha_id: number
+          data_lancamento?: string | null
+          id?: number
+          lancado_por: number
+          loja_id: number
+          valor_realizado: number
+        }
+        Update: {
+          campanha_id?: number
+          data_lancamento?: string | null
+          id?: number
+          lancado_por?: number
+          loja_id?: number
+          valor_realizado?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campanha_lancamentos_campanha_id_fkey"
+            columns: ["campanha_id"]
+            isOneToOne: false
+            referencedRelation: "campanhas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campanha_lancamentos_lancado_por_fkey"
+            columns: ["lancado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campanha_lancamentos_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campanha_metas: {
+        Row: {
+          campanha_id: number
+          id: number
+          loja_id: number
+          valor_meta: number
+        }
+        Insert: {
+          campanha_id: number
+          id?: number
+          loja_id: number
+          valor_meta: number
+        }
+        Update: {
+          campanha_id?: number
+          id?: number
+          loja_id?: number
+          valor_meta?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campanha_metas_campanha_id_fkey"
+            columns: ["campanha_id"]
+            isOneToOne: false
+            referencedRelation: "campanhas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campanha_metas_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campanhas: {
+        Row: {
+          criado_por: number
+          data_atualizacao: string | null
+          data_criacao: string | null
+          data_fim: string
+          data_inicio: string
+          descricao: string | null
+          id: number
+          meta_total: number | null
+          nome: string
+          sem_metas: boolean | null
+          status: Database["public"]["Enums"]["campanha_status"] | null
+          tipo_campanha: Database["public"]["Enums"]["campanha_tipo"]
+          valor_meta: number | null
+        }
+        Insert: {
+          criado_por: number
+          data_atualizacao?: string | null
+          data_criacao?: string | null
+          data_fim: string
+          data_inicio: string
+          descricao?: string | null
+          id?: number
+          meta_total?: number | null
+          nome: string
+          sem_metas?: boolean | null
+          status?: Database["public"]["Enums"]["campanha_status"] | null
+          tipo_campanha?: Database["public"]["Enums"]["campanha_tipo"]
+          valor_meta?: number | null
+        }
+        Update: {
+          criado_por?: number
+          data_atualizacao?: string | null
+          data_criacao?: string | null
+          data_fim?: string
+          data_inicio?: string
+          descricao?: string | null
+          id?: number
+          meta_total?: number | null
+          nome?: string
+          sem_metas?: boolean | null
+          status?: Database["public"]["Enums"]["campanha_status"] | null
+          tipo_campanha?: Database["public"]["Enums"]["campanha_tipo"]
+          valor_meta?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campanhas_criado_por_fkey"
+            columns: ["criado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campanhas_lojas: {
+        Row: {
+          campanha_id: number
+          id: number
+          loja_id: number
+          realizado: number | null
+          status: Database["public"]["Enums"]["campanha_status"] | null
+        }
+        Insert: {
+          campanha_id: number
+          id?: number
+          loja_id: number
+          realizado?: number | null
+          status?: Database["public"]["Enums"]["campanha_status"] | null
+        }
+        Update: {
+          campanha_id?: number
+          id?: number
+          loja_id?: number
+          realizado?: number | null
+          status?: Database["public"]["Enums"]["campanha_status"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campanhas_lojas_campanha_id_fkey"
+            columns: ["campanha_id"]
+            isOneToOne: false
+            referencedRelation: "campanhas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campanhas_lojas_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campanhas_lojas_historico: {
+        Row: {
+          campanha_loja_id: number
+          data_registro: string
+          id: number
+          registrado_por: number
+          valor_anterior: number | null
+          valor_novo: number
+        }
+        Insert: {
+          campanha_loja_id: number
+          data_registro: string
+          id?: number
+          registrado_por: number
+          valor_anterior?: number | null
+          valor_novo: number
+        }
+        Update: {
+          campanha_loja_id?: number
+          data_registro?: string
+          id?: number
+          registrado_por?: number
+          valor_anterior?: number | null
+          valor_novo?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campanhas_lojas_historico_campanha_loja_id_fkey"
+            columns: ["campanha_loja_id"]
+            isOneToOne: false
+            referencedRelation: "campanhas_lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campanhas_lojas_historico_registrado_por_fkey"
+            columns: ["registrado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      config_salario: {
+        Row: {
+          atualizado_por: number
+          bonus_fixo: number | null
+          criado_por: number
+          data_atualizacao: string
+          data_criacao: string
+          desconto_fixo: number | null
+          id: number
+          salario_base: number | null
+          usuario_id: number
+        }
+        Insert: {
+          atualizado_por: number
+          bonus_fixo?: number | null
+          criado_por: number
+          data_atualizacao: string
+          data_criacao: string
+          desconto_fixo?: number | null
+          id?: number
+          salario_base?: number | null
+          usuario_id: number
+        }
+        Update: {
+          atualizado_por?: number
+          bonus_fixo?: number | null
+          criado_por?: number
+          data_atualizacao?: string
+          data_criacao?: string
+          desconto_fixo?: number | null
+          id?: number
+          salario_base?: number | null
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "config_salario_atualizado_por_fkey"
+            columns: ["atualizado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "config_salario_criado_por_fkey"
+            columns: ["criado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "config_salario_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      config_salario_tipo: {
+        Row: {
+          atualizado_por: number
+          bonus_fixo: number | null
+          criado_por: number
+          data_atualizacao: string
+          data_criacao: string
+          desconto_fixo: number | null
+          id: number
+          salario_base: number | null
+          tipo_usuario: string
+        }
+        Insert: {
+          atualizado_por: number
+          bonus_fixo?: number | null
+          criado_por: number
+          data_atualizacao: string
+          data_criacao: string
+          desconto_fixo?: number | null
+          id?: number
+          salario_base?: number | null
+          tipo_usuario: string
+        }
+        Update: {
+          atualizado_por?: number
+          bonus_fixo?: number | null
+          criado_por?: number
+          data_atualizacao?: string
+          data_criacao?: string
+          desconto_fixo?: number | null
+          id?: number
+          salario_base?: number | null
+          tipo_usuario?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "config_salario_tipo_atualizado_por_fkey"
+            columns: ["atualizado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "config_salario_tipo_criado_por_fkey"
+            columns: ["criado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      correcoes_ponto: {
+        Row: {
+          data: string
+          data_atualizacao: string | null
+          data_criacao: string
+          id: number
+          observacao: string | null
+          relatorio_id: number
+          status: Database["public"]["Enums"]["correcao_status"]
+          tipo: Database["public"]["Enums"]["correcao_tipo"]
+          usuario_id: number
+          valor_corrigido: string | null
+          valor_original: string | null
+        }
+        Insert: {
+          data: string
+          data_atualizacao?: string | null
+          data_criacao: string
+          id?: number
+          observacao?: string | null
+          relatorio_id: number
+          status?: Database["public"]["Enums"]["correcao_status"]
+          tipo: Database["public"]["Enums"]["correcao_tipo"]
+          usuario_id: number
+          valor_corrigido?: string | null
+          valor_original?: string | null
+        }
+        Update: {
+          data?: string
+          data_atualizacao?: string | null
+          data_criacao?: string
+          id?: number
+          observacao?: string | null
+          relatorio_id?: number
+          status?: Database["public"]["Enums"]["correcao_status"]
+          tipo?: Database["public"]["Enums"]["correcao_tipo"]
+          usuario_id?: number
+          valor_corrigido?: string | null
+          valor_original?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "correcoes_ponto_relatorio_id_fkey"
+            columns: ["relatorio_id"]
+            isOneToOne: false
+            referencedRelation: "relatorios_ponto"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "correcoes_ponto_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      depositos: {
+        Row: {
+          banco_id: number | null
+          data_atualizacao: string | null
+          data_criacao: string
+          data_deposito: string | null
+          data_movimento: string
+          diferenca: number
+          hora_deposito: string | null
+          id: number
+          loja_id: number
+          matfun_id: string | null
+          observacao: string | null
+          usuario_id: number
+          valor_a_depositar: number
+          valor_ajuste: number | null
+          valor_apos_ajuste: number
+          valor_depositado: number
+        }
+        Insert: {
+          banco_id?: number | null
+          data_atualizacao?: string | null
+          data_criacao: string
+          data_deposito?: string | null
+          data_movimento: string
+          diferenca?: number
+          hora_deposito?: string | null
+          id?: number
+          loja_id: number
+          matfun_id?: string | null
+          observacao?: string | null
+          usuario_id: number
+          valor_a_depositar?: number
+          valor_ajuste?: number | null
+          valor_apos_ajuste?: number
+          valor_depositado?: number
+        }
+        Update: {
+          banco_id?: number | null
+          data_atualizacao?: string | null
+          data_criacao?: string
+          data_deposito?: string | null
+          data_movimento?: string
+          diferenca?: number
+          hora_deposito?: string | null
+          id?: number
+          loja_id?: number
+          matfun_id?: string | null
+          observacao?: string | null
+          usuario_id?: number
+          valor_a_depositar?: number
+          valor_ajuste?: number | null
+          valor_apos_ajuste?: number
+          valor_depositado?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "depositos_banco_id_fkey"
+            columns: ["banco_id"]
+            isOneToOne: false
+            referencedRelation: "bancos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "depositos_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "depositos_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      escala_ajustes_automaticos: {
+        Row: {
+          ativo: boolean
           created_at: string | null
           id: number
-          meta_mensal: number
-          periodo_meta_id: number
+          loja_id: number
+          prioridade: number
+          tipo_ausencia: string
+          tipo_funcionario_ajuste: string
+          tipo_funcionario_ausente: string
+          turno_ajuste: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string | null
+          id?: number
+          loja_id: number
+          prioridade?: number
+          tipo_ausencia: string
+          tipo_funcionario_ajuste: string
+          tipo_funcionario_ausente: string
+          turno_ajuste?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string | null
+          id?: number
+          loja_id?: number
+          prioridade?: number
+          tipo_ausencia?: string
+          tipo_funcionario_ajuste?: string
+          tipo_funcionario_ausente?: string
+          turno_ajuste?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "escala_ajustes_automaticos_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      escala_config: {
+        Row: {
+          created_at: string | null
+          folga_fixa: string | null
+          horario_entrada: string
+          horario_saida: string
+          horario_saida_intervalo: string
+          horario_volta_intervalo: string
+          id: number
+          loja_id: number
+          observacoes: string | null
           updated_at: string | null
           usuario_id: number
         }
         Insert: {
-          categoria: string
           created_at?: string | null
+          folga_fixa?: string | null
+          horario_entrada?: string
+          horario_saida?: string
+          horario_saida_intervalo?: string
+          horario_volta_intervalo?: string
           id?: number
-          meta_mensal?: number
-          periodo_meta_id: number
+          loja_id: number
+          observacoes?: string | null
           updated_at?: string | null
           usuario_id: number
         }
         Update: {
-          categoria?: string
           created_at?: string | null
+          folga_fixa?: string | null
+          horario_entrada?: string
+          horario_saida?: string
+          horario_saida_intervalo?: string
+          horario_volta_intervalo?: string
+          id?: number
+          loja_id?: number
+          observacoes?: string | null
+          updated_at?: string | null
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "escala_config_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "escala_config_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      escala_feriados: {
+        Row: {
+          created_at: string | null
+          data: string
+          id: number
+          loja_id: number | null
+          nome: string
+          recorrente: boolean
+          tipo: Database["public"]["Enums"]["feriado_tipo"]
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          data: string
+          id?: number
+          loja_id?: number | null
+          nome: string
+          recorrente?: boolean
+          tipo?: Database["public"]["Enums"]["feriado_tipo"]
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          data?: string
+          id?: number
+          loja_id?: number | null
+          nome?: string
+          recorrente?: boolean
+          tipo?: Database["public"]["Enums"]["feriado_tipo"]
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "escala_feriados_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      escala_horario_especifico: {
+        Row: {
+          created_at: string | null
+          data_ref: string
+          horario_entrada: string
+          horario_saida: string
+          horario_saida_intervalo: string
+          horario_volta_intervalo: string
+          id: number
+          loja_id: number
+          observacao: string | null
+          updated_at: string | null
+          usuario_id: number
+        }
+        Insert: {
+          created_at?: string | null
+          data_ref: string
+          horario_entrada: string
+          horario_saida: string
+          horario_saida_intervalo: string
+          horario_volta_intervalo: string
+          id?: number
+          loja_id: number
+          observacao?: string | null
+          updated_at?: string | null
+          usuario_id: number
+        }
+        Update: {
+          created_at?: string | null
+          data_ref?: string
+          horario_entrada?: string
+          horario_saida?: string
+          horario_saida_intervalo?: string
+          horario_volta_intervalo?: string
+          id?: number
+          loja_id?: number
+          observacao?: string | null
+          updated_at?: string | null
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "escala_horario_especifico_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "escala_horario_especifico_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      escala_horarios_dia: {
+        Row: {
+          created_at: string | null
+          data: string
+          horario_entrada: string
+          horario_saida: string
+          horario_saida_intervalo: string
+          horario_volta_intervalo: string
+          id: number
+          observacoes: string | null
+          updated_at: string | null
+          usuario_id: number
+        }
+        Insert: {
+          created_at?: string | null
+          data: string
+          horario_entrada: string
+          horario_saida: string
+          horario_saida_intervalo: string
+          horario_volta_intervalo: string
+          id?: number
+          observacoes?: string | null
+          updated_at?: string | null
+          usuario_id: number
+        }
+        Update: {
+          created_at?: string | null
+          data?: string
+          horario_entrada?: string
+          horario_saida?: string
+          horario_saida_intervalo?: string
+          horario_volta_intervalo?: string
+          id?: number
+          observacoes?: string | null
+          updated_at?: string | null
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "escala_horarios_dia_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      escala_picos: {
+        Row: {
+          created_at: string | null
+          dia_semana: number
+          hora_fim: string
+          hora_inicio: string
+          id: number
+          loja_id: number
+          nivel: Database["public"]["Enums"]["pico_nivel"]
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          dia_semana: number
+          hora_fim: string
+          hora_inicio: string
+          id?: number
+          loja_id: number
+          nivel?: Database["public"]["Enums"]["pico_nivel"]
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          dia_semana?: number
+          hora_fim?: string
+          hora_inicio?: string
+          id?: number
+          loja_id?: number
+          nivel?: Database["public"]["Enums"]["pico_nivel"]
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "escala_picos_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      escala_turnos: {
+        Row: {
+          cor: string | null
+          created_at: string | null
+          horario_entrada: string
+          horario_saida: string
+          horario_saida_intervalo: string
+          horario_volta_intervalo: string
+          id: number
+          loja_id: number
+          nome: string
+          ordem: number
+          updated_at: string | null
+        }
+        Insert: {
+          cor?: string | null
+          created_at?: string | null
+          horario_entrada: string
+          horario_saida: string
+          horario_saida_intervalo: string
+          horario_volta_intervalo: string
+          id?: number
+          loja_id: number
+          nome: string
+          ordem?: number
+          updated_at?: string | null
+        }
+        Update: {
+          cor?: string | null
+          created_at?: string | null
+          horario_entrada?: string
+          horario_saida?: string
+          horario_saida_intervalo?: string
+          horario_volta_intervalo?: string
+          id?: number
+          loja_id?: number
+          nome?: string
+          ordem?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "escala_turnos_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ferias: {
+        Row: {
+          ano_ferias: number
+          aprovado_por: number | null
+          data_atualizacao: string | null
+          data_solicitacao: string
+          id: number
+          mes_ferias: string
+          observacoes: string | null
+          status: Database["public"]["Enums"]["ferias_status"]
+          usuario_id: number
+        }
+        Insert: {
+          ano_ferias: number
+          aprovado_por?: number | null
+          data_atualizacao?: string | null
+          data_solicitacao: string
+          id?: number
+          mes_ferias: string
+          observacoes?: string | null
+          status?: Database["public"]["Enums"]["ferias_status"]
+          usuario_id: number
+        }
+        Update: {
+          ano_ferias?: number
+          aprovado_por?: number | null
+          data_atualizacao?: string | null
+          data_solicitacao?: string
+          id?: number
+          mes_ferias?: string
+          observacoes?: string | null
+          status?: Database["public"]["Enums"]["ferias_status"]
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ferias_aprovado_por_fkey"
+            columns: ["aprovado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ferias_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ferias_historico: {
+        Row: {
+          acao: Database["public"]["Enums"]["ferias_acao"]
+          data_acao: string
+          ferias_id: number
+          id: number
+          observacoes: string | null
+          usuario_id: number
+        }
+        Insert: {
+          acao: Database["public"]["Enums"]["ferias_acao"]
+          data_acao: string
+          ferias_id: number
+          id?: number
+          observacoes?: string | null
+          usuario_id: number
+        }
+        Update: {
+          acao?: Database["public"]["Enums"]["ferias_acao"]
+          data_acao?: string
+          ferias_id?: number
+          id?: number
+          observacoes?: string | null
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ferias_historico_ferias_id_fkey"
+            columns: ["ferias_id"]
+            isOneToOne: false
+            referencedRelation: "ferias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ferias_historico_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      folgas: {
+        Row: {
+          data_folga: string
+          data_registro: string | null
+          folga_id: number
+          observacao: string | null
+          periodo_id: number
+          registrado_por: number | null
+          usuario_id: number
+        }
+        Insert: {
+          data_folga: string
+          data_registro?: string | null
+          folga_id?: number
+          observacao?: string | null
+          periodo_id: number
+          registrado_por?: number | null
+          usuario_id: number
+        }
+        Update: {
+          data_folga?: string
+          data_registro?: string | null
+          folga_id?: number
+          observacao?: string | null
+          periodo_id?: number
+          registrado_por?: number | null
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "folgas_registrado_por_fkey"
+            columns: ["registrado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "folgas_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lastlogin: {
+        Row: {
+          data_login: string
+          id: number
+          ip_address: string | null
+          user_agent: string | null
+          usuario_id: number
+        }
+        Insert: {
+          data_login: string
+          id?: number
+          ip_address?: string | null
+          user_agent?: string | null
+          usuario_id: number
+        }
+        Update: {
+          data_login?: string
+          id?: number
+          ip_address?: string | null
+          user_agent?: string | null
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lastlogin_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listafun: {
+        Row: {
+          cpffun: string | null
+          id: number
+          matfun: string
+          nomefun: string
+        }
+        Insert: {
+          cpffun?: string | null
+          id?: number
+          matfun: string
+          nomefun: string
+        }
+        Update: {
+          cpffun?: string | null
+          id?: number
+          matfun?: string
+          nomefun?: string
+        }
+        Relationships: []
+      }
+      log_eventos: {
+        Row: {
+          data_evento: string | null
+          descricao: string | null
+          id: number
+          ip_address: string | null
+          tipo_evento: string
+          user_agent: string | null
+          usuario_id: number | null
+        }
+        Insert: {
+          data_evento?: string | null
+          descricao?: string | null
+          id?: number
+          ip_address?: string | null
+          tipo_evento: string
+          user_agent?: string | null
+          usuario_id?: number | null
+        }
+        Update: {
+          data_evento?: string | null
+          descricao?: string | null
+          id?: number
+          ip_address?: string | null
+          tipo_evento?: string
+          user_agent?: string | null
+          usuario_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "log_eventos_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lojas: {
+        Row: {
+          celular: string | null
+          cep: string | null
+          cidade: string | null
+          cnpj: string | null
+          id: number
+          nome: string
+          numero: string
+          numero_endereco: string | null
+          regiao: Database["public"]["Enums"]["regiao_tipo"]
+          rua: string | null
+          senha: string | null
+          supervisao: string | null
+        }
+        Insert: {
+          celular?: string | null
+          cep?: string | null
+          cidade?: string | null
+          cnpj?: string | null
+          id?: number
+          nome: string
+          numero: string
+          numero_endereco?: string | null
+          regiao: Database["public"]["Enums"]["regiao_tipo"]
+          rua?: string | null
+          senha?: string | null
+          supervisao?: string | null
+        }
+        Update: {
+          celular?: string | null
+          cep?: string | null
+          cidade?: string | null
+          cnpj?: string | null
+          id?: number
+          nome?: string
+          numero?: string
+          numero_endereco?: string | null
+          regiao?: Database["public"]["Enums"]["regiao_tipo"]
+          rua?: string | null
+          senha?: string | null
+          supervisao?: string | null
+        }
+        Relationships: []
+      }
+      lojas_resumo_999: {
+        Row: {
+          ativo: boolean | null
+          data_criacao: string | null
+          dia_resumo: number
+          id: number
+          loja_id: number
+        }
+        Insert: {
+          ativo?: boolean | null
+          data_criacao?: string | null
+          dia_resumo: number
+          id?: number
+          loja_id: number
+        }
+        Update: {
+          ativo?: boolean | null
+          data_criacao?: string | null
+          dia_resumo?: number
+          id?: number
+          loja_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lojas_resumo_999_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      metas: {
+        Row: {
+          categoria: Database["public"]["Enums"]["categoria_meta"] | null
+          id: number
+          meta_mensal: number
+          periodo: string | null
+          periodo_id: number | null
+          periodo_meta_id: number | null
+          usuario_id: number
+        }
+        Insert: {
+          categoria?: Database["public"]["Enums"]["categoria_meta"] | null
+          id?: number
+          meta_mensal: number
+          periodo?: string | null
+          periodo_id?: number | null
+          periodo_meta_id?: number | null
+          usuario_id: number
+        }
+        Update: {
+          categoria?: Database["public"]["Enums"]["categoria_meta"] | null
           id?: number
           meta_mensal?: number
-          periodo_meta_id?: number
-          updated_at?: string | null
+          periodo?: string | null
+          periodo_id?: number | null
+          periodo_meta_id?: number | null
           usuario_id?: number
         }
         Relationships: [
@@ -91,30 +1361,43 @@ export type Database = {
       }
       metas_loja: {
         Row: {
-          created_at: string | null
+          criado_por_usuario_id: number | null
+          data_atualizacao: string | null
+          data_criacao: string | null
           id: number
           loja_id: number
           meta_valor_total: number
+          observacoes: string | null
           periodo_meta_id: number
-          updated_at: string | null
         }
         Insert: {
-          created_at?: string | null
+          criado_por_usuario_id?: number | null
+          data_atualizacao?: string | null
+          data_criacao?: string | null
           id?: number
           loja_id: number
           meta_valor_total?: number
+          observacoes?: string | null
           periodo_meta_id: number
-          updated_at?: string | null
         }
         Update: {
-          created_at?: string | null
+          criado_por_usuario_id?: number | null
+          data_atualizacao?: string | null
+          data_criacao?: string | null
           id?: number
           loja_id?: number
           meta_valor_total?: number
+          observacoes?: string | null
           periodo_meta_id?: number
-          updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "metas_loja_criado_por_usuario_id_fkey"
+            columns: ["criado_por_usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "metas_loja_loja_id_fkey"
             columns: ["loja_id"]
@@ -160,81 +1443,973 @@ export type Database = {
           },
         ]
       }
-      periodos_meta: {
+      notificacoes: {
         Row: {
-          created_at: string | null
-          data_fim: string
-          data_inicio: string
+          data_criacao: string
+          data_leitura: string | null
           id: number
+          lida: boolean
+          loja_id: number | null
+          mensagem: string
+          tipo: Database["public"]["Enums"]["notificacao_tipo"]
+          titulo: string
+          usuario_destinatario_id: number
+          usuario_remetente_id: number
+        }
+        Insert: {
+          data_criacao: string
+          data_leitura?: string | null
+          id?: number
+          lida?: boolean
+          loja_id?: number | null
+          mensagem: string
+          tipo?: Database["public"]["Enums"]["notificacao_tipo"]
+          titulo: string
+          usuario_destinatario_id: number
+          usuario_remetente_id: number
+        }
+        Update: {
+          data_criacao?: string
+          data_leitura?: string | null
+          id?: number
+          lida?: boolean
+          loja_id?: number | null
+          mensagem?: string
+          tipo?: Database["public"]["Enums"]["notificacao_tipo"]
+          titulo?: string
+          usuario_destinatario_id?: number
+          usuario_remetente_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notificacoes_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notificacoes_usuario_destinatario_id_fkey"
+            columns: ["usuario_destinatario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notificacoes_usuario_remetente_id_fkey"
+            columns: ["usuario_remetente_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ocorrencias: {
+        Row: {
+          data_alteracao: string | null
+          data_atualizacao: string
+          data_criacao: string
+          id: number
+          lido: boolean
+          loja_id: number
+          mensagem: string
+          prioridade: Database["public"]["Enums"]["prioridade_tipo"]
+          privada: boolean
+          status: Database["public"]["Enums"]["ocorrencia_status"]
+          titulo: string
+          usuario_destino_id: number
+          usuario_id: number
+        }
+        Insert: {
+          data_alteracao?: string | null
+          data_atualizacao: string
+          data_criacao: string
+          id?: number
+          lido?: boolean
+          loja_id: number
+          mensagem: string
+          prioridade?: Database["public"]["Enums"]["prioridade_tipo"]
+          privada?: boolean
+          status?: Database["public"]["Enums"]["ocorrencia_status"]
+          titulo: string
+          usuario_destino_id: number
+          usuario_id: number
+        }
+        Update: {
+          data_alteracao?: string | null
+          data_atualizacao?: string
+          data_criacao?: string
+          id?: number
+          lido?: boolean
+          loja_id?: number
+          mensagem?: string
+          prioridade?: Database["public"]["Enums"]["prioridade_tipo"]
+          privada?: boolean
+          status?: Database["public"]["Enums"]["ocorrencia_status"]
+          titulo?: string
+          usuario_destino_id?: number
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ocorrencias_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ocorrencias_usuario_destino_id_fkey"
+            columns: ["usuario_destino_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ocorrencias_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ocorrencias_historico: {
+        Row: {
+          data_alteracao: string | null
+          descricao: string | null
+          id: number
+          ocorrencia_id: number
+          tipo_alteracao: string
+          usuario_id: number
+        }
+        Insert: {
+          data_alteracao?: string | null
+          descricao?: string | null
+          id?: number
+          ocorrencia_id: number
+          tipo_alteracao: string
+          usuario_id: number
+        }
+        Update: {
+          data_alteracao?: string | null
+          descricao?: string | null
+          id?: number
+          ocorrencia_id?: number
+          tipo_alteracao?: string
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ocorrencias_historico_ocorrencia_id_fkey"
+            columns: ["ocorrencia_id"]
+            isOneToOne: false
+            referencedRelation: "ocorrencias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ocorrencias_historico_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ocorrencias_respostas: {
+        Row: {
+          data_criacao: string
+          id: number
+          mensagem: string
+          ocorrencia_id: number
+          usuario_id: number
+        }
+        Insert: {
+          data_criacao: string
+          id?: number
+          mensagem: string
+          ocorrencia_id: number
+          usuario_id: number
+        }
+        Update: {
+          data_criacao?: string
+          id?: number
+          mensagem?: string
+          ocorrencia_id?: number
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ocorrencias_respostas_ocorrencia_id_fkey"
+            columns: ["ocorrencia_id"]
+            isOneToOne: false
+            referencedRelation: "ocorrencias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ocorrencias_respostas_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ocorrencias_visualizacoes: {
+        Row: {
+          data_visualizacao: string
+          id: number
+          ocorrencia_id: number
+          usuario_id: number
+        }
+        Insert: {
+          data_visualizacao: string
+          id?: number
+          ocorrencia_id: number
+          usuario_id: number
+        }
+        Update: {
+          data_visualizacao?: string
+          id?: number
+          ocorrencia_id?: number
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ocorrencias_visualizacoes_ocorrencia_id_fkey"
+            columns: ["ocorrencia_id"]
+            isOneToOne: false
+            referencedRelation: "ocorrencias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ocorrencias_visualizacoes_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orcamento_itens: {
+        Row: {
+          codigo: string
+          data_adicao: string
+          desconto: number
+          descricao: string
+          id: number
+          orcamento_id: number
+          pmc: number
+          quantidade: number
+          valor_final: number
+        }
+        Insert: {
+          codigo: string
+          data_adicao?: string
+          desconto?: number
+          descricao: string
+          id?: number
+          orcamento_id: number
+          pmc: number
+          quantidade?: number
+          valor_final: number
+        }
+        Update: {
+          codigo?: string
+          data_adicao?: string
+          desconto?: number
+          descricao?: string
+          id?: number
+          orcamento_id?: number
+          pmc?: number
+          quantidade?: number
+          valor_final?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orcamento_itens_orcamento_id_fkey"
+            columns: ["orcamento_id"]
+            isOneToOne: false
+            referencedRelation: "orcamentos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orcamentos: {
+        Row: {
+          cliente_cpf: string | null
+          cliente_email: string | null
+          cliente_endereco: string | null
+          cliente_nome: string
+          cliente_observacoes: string | null
+          cliente_telefone: string | null
+          codigo: string
+          data_criacao: string
+          data_validade: string
+          filial_id: number | null
+          filial_nome: string | null
+          gerador_cargo: string | null
+          gerador_nome: string
+          id: number
+          ip_criacao: string | null
+          quantidade_itens: number
+          status: Database["public"]["Enums"]["orcamento_status"]
+          usuario_id: number | null
+          valor_total: number
+        }
+        Insert: {
+          cliente_cpf?: string | null
+          cliente_email?: string | null
+          cliente_endereco?: string | null
+          cliente_nome: string
+          cliente_observacoes?: string | null
+          cliente_telefone?: string | null
+          codigo: string
+          data_criacao?: string
+          data_validade: string
+          filial_id?: number | null
+          filial_nome?: string | null
+          gerador_cargo?: string | null
+          gerador_nome: string
+          id?: number
+          ip_criacao?: string | null
+          quantidade_itens?: number
+          status?: Database["public"]["Enums"]["orcamento_status"]
+          usuario_id?: number | null
+          valor_total?: number
+        }
+        Update: {
+          cliente_cpf?: string | null
+          cliente_email?: string | null
+          cliente_endereco?: string | null
+          cliente_nome?: string
+          cliente_observacoes?: string | null
+          cliente_telefone?: string | null
+          codigo?: string
+          data_criacao?: string
+          data_validade?: string
+          filial_id?: number | null
+          filial_nome?: string | null
+          gerador_cargo?: string | null
+          gerador_nome?: string
+          id?: number
+          ip_criacao?: string | null
+          quantidade_itens?: number
+          status?: Database["public"]["Enums"]["orcamento_status"]
+          usuario_id?: number | null
+          valor_total?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orcamentos_filial_id_fkey"
+            columns: ["filial_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orcamentos_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pdvpro: {
+        Row: {
+          codigo: string
+          codint: number | null
+          created_at: string | null
+          grupo: number | null
           nome: string
-          status: string | null
+          nompati: string | null
+          tipogru: number | null
           updated_at: string | null
         }
         Insert: {
+          codigo: string
+          codint?: number | null
           created_at?: string | null
-          data_fim: string
-          data_inicio: string
-          id?: number
+          grupo?: number | null
           nome: string
-          status?: string | null
+          nompati?: string | null
+          tipogru?: number | null
           updated_at?: string | null
         }
         Update: {
+          codigo?: string
+          codint?: number | null
           created_at?: string | null
-          data_fim?: string
-          data_inicio?: string
-          id?: number
+          grupo?: number | null
           nome?: string
-          status?: string | null
+          nompati?: string | null
+          tipogru?: number | null
           updated_at?: string | null
         }
         Relationships: []
       }
+      periodos_meta: {
+        Row: {
+          data_criacao: string | null
+          data_fim: string
+          data_inicio: string
+          descricao: string | null
+          id: number
+          status: Database["public"]["Enums"]["periodo_status"]
+        }
+        Insert: {
+          data_criacao?: string | null
+          data_fim: string
+          data_inicio: string
+          descricao?: string | null
+          id?: number
+          status?: Database["public"]["Enums"]["periodo_status"]
+        }
+        Update: {
+          data_criacao?: string | null
+          data_fim?: string
+          data_inicio?: string
+          descricao?: string | null
+          id?: number
+          status?: Database["public"]["Enums"]["periodo_status"]
+        }
+        Relationships: []
+      }
+      recados: {
+        Row: {
+          autor_id: number
+          conteudo: string | null
+          data_atualizacao: string | null
+          data_criacao: string
+          id: number
+          loja_id: number
+          titulo: string | null
+        }
+        Insert: {
+          autor_id: number
+          conteudo?: string | null
+          data_atualizacao?: string | null
+          data_criacao: string
+          id?: number
+          loja_id: number
+          titulo?: string | null
+        }
+        Update: {
+          autor_id?: number
+          conteudo?: string | null
+          data_atualizacao?: string | null
+          data_criacao?: string
+          id?: number
+          loja_id?: number
+          titulo?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recados_autor_id_fkey"
+            columns: ["autor_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recados_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recados_leitura: {
+        Row: {
+          data_leitura: string
+          id: number
+          recado_id: number
+          usuario_id: number
+        }
+        Insert: {
+          data_leitura: string
+          id?: number
+          recado_id: number
+          usuario_id: number
+        }
+        Update: {
+          data_leitura?: string
+          id?: number
+          recado_id?: number
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recados_leitura_recado_id_fkey"
+            columns: ["recado_id"]
+            isOneToOne: false
+            referencedRelation: "recados"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recados_leitura_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recados_notificacoes: {
+        Row: {
+          data_notificacao: string
+          id: number
+          recado_id: number
+          usuario_id: number
+          visualizada: boolean
+        }
+        Insert: {
+          data_notificacao: string
+          id?: number
+          recado_id: number
+          usuario_id: number
+          visualizada?: boolean
+        }
+        Update: {
+          data_notificacao?: string
+          id?: number
+          recado_id?: number
+          usuario_id?: number
+          visualizada?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recados_notificacoes_recado_id_fkey"
+            columns: ["recado_id"]
+            isOneToOne: false
+            referencedRelation: "recados"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recados_notificacoes_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recovery_tokens: {
+        Row: {
+          data_criacao: string | null
+          data_expiracao: string
+          id: number
+          ip_address: string | null
+          token: string
+          usuario_id: number
+          utilizado: boolean | null
+        }
+        Insert: {
+          data_criacao?: string | null
+          data_expiracao: string
+          id?: number
+          ip_address?: string | null
+          token: string
+          usuario_id: number
+          utilizado?: boolean | null
+        }
+        Update: {
+          data_criacao?: string | null
+          data_expiracao?: string
+          id?: number
+          ip_address?: string | null
+          token?: string
+          usuario_id?: number
+          utilizado?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recovery_tokens_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      registros_ponto: {
+        Row: {
+          data: string
+          dia_semana: string
+          entrada1: string | null
+          entrada2: string | null
+          id: number
+          observacao: string | null
+          relatorio_id: number
+          saida1: string | null
+          saida2: string | null
+          status: Database["public"]["Enums"]["registro_status"]
+          total_horas: string | null
+        }
+        Insert: {
+          data: string
+          dia_semana: string
+          entrada1?: string | null
+          entrada2?: string | null
+          id?: number
+          observacao?: string | null
+          relatorio_id: number
+          saida1?: string | null
+          saida2?: string | null
+          status?: Database["public"]["Enums"]["registro_status"]
+          total_horas?: string | null
+        }
+        Update: {
+          data?: string
+          dia_semana?: string
+          entrada1?: string | null
+          entrada2?: string | null
+          id?: number
+          observacao?: string | null
+          relatorio_id?: number
+          saida1?: string | null
+          saida2?: string | null
+          status?: Database["public"]["Enums"]["registro_status"]
+          total_horas?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "registros_ponto_relatorio_id_fkey"
+            columns: ["relatorio_id"]
+            isOneToOne: false
+            referencedRelation: "relatorios_ponto"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      relatorios_ponto: {
+        Row: {
+          ano: number
+          arquivo: string
+          data_analise: string | null
+          data_upload: string
+          funcionario_id: number
+          id: number
+          loja_id: number
+          mes: number
+          status: Database["public"]["Enums"]["relatorio_status"]
+          usuario_analise_id: number | null
+          usuario_upload_id: number
+        }
+        Insert: {
+          ano: number
+          arquivo: string
+          data_analise?: string | null
+          data_upload: string
+          funcionario_id: number
+          id?: number
+          loja_id: number
+          mes: number
+          status?: Database["public"]["Enums"]["relatorio_status"]
+          usuario_analise_id?: number | null
+          usuario_upload_id: number
+        }
+        Update: {
+          ano?: number
+          arquivo?: string
+          data_analise?: string | null
+          data_upload?: string
+          funcionario_id?: number
+          id?: number
+          loja_id?: number
+          mes?: number
+          status?: Database["public"]["Enums"]["relatorio_status"]
+          usuario_analise_id?: number | null
+          usuario_upload_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relatorios_ponto_funcionario_id_fkey"
+            columns: ["funcionario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "relatorios_ponto_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "relatorios_ponto_usuario_analise_id_fkey"
+            columns: ["usuario_analise_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "relatorios_ponto_usuario_upload_id_fkey"
+            columns: ["usuario_upload_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      selfcheckout_dados: {
+        Row: {
+          clientes_caixa: number
+          clientes_total: number
+          data_atualizacao: string | null
+          data_cadastro: string
+          data_lancamento: string
+          id: number
+          loja_id: number
+          matricula_caixa: string
+          pagamento_convenio: number
+          pagamento_credito: number
+          pagamento_debito: number
+          pagamento_dinheiro: number
+          pagamento_pos: number
+          valor_convenio: number | null
+          valor_credito: number | null
+          valor_debito: number | null
+          valor_dinheiro: number | null
+          valor_pos: number | null
+        }
+        Insert: {
+          clientes_caixa: number
+          clientes_total: number
+          data_atualizacao?: string | null
+          data_cadastro: string
+          data_lancamento: string
+          id?: number
+          loja_id: number
+          matricula_caixa?: string
+          pagamento_convenio?: number
+          pagamento_credito?: number
+          pagamento_debito?: number
+          pagamento_dinheiro?: number
+          pagamento_pos?: number
+          valor_convenio?: number | null
+          valor_credito?: number | null
+          valor_debito?: number | null
+          valor_dinheiro?: number | null
+          valor_pos?: number | null
+        }
+        Update: {
+          clientes_caixa?: number
+          clientes_total?: number
+          data_atualizacao?: string | null
+          data_cadastro?: string
+          data_lancamento?: string
+          id?: number
+          loja_id?: number
+          matricula_caixa?: string
+          pagamento_convenio?: number
+          pagamento_credito?: number
+          pagamento_debito?: number
+          pagamento_dinheiro?: number
+          pagamento_pos?: number
+          valor_convenio?: number | null
+          valor_credito?: number | null
+          valor_debito?: number | null
+          valor_dinheiro?: number | null
+          valor_pos?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "selfcheckout_dados_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tutoriais: {
+        Row: {
+          autor_id: number
+          cargos_permitidos: string | null
+          data_atualizacao: string | null
+          data_criacao: string | null
+          id: number
+          loja_id: number
+          titulo: string
+        }
+        Insert: {
+          autor_id: number
+          cargos_permitidos?: string | null
+          data_atualizacao?: string | null
+          data_criacao?: string | null
+          id?: number
+          loja_id: number
+          titulo: string
+        }
+        Update: {
+          autor_id?: number
+          cargos_permitidos?: string | null
+          data_atualizacao?: string | null
+          data_criacao?: string | null
+          id?: number
+          loja_id?: number
+          titulo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tutoriais_autor_id_fkey"
+            columns: ["autor_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tutoriais_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tutoriais_passos: {
+        Row: {
+          conteudo_passo: string
+          id: number
+          imagem_url: string | null
+          numero_passo: number
+          titulo_passo: string | null
+          tutorial_id: number
+        }
+        Insert: {
+          conteudo_passo: string
+          id?: number
+          imagem_url?: string | null
+          numero_passo: number
+          titulo_passo?: string | null
+          tutorial_id: number
+        }
+        Update: {
+          conteudo_passo?: string
+          id?: number
+          imagem_url?: string | null
+          numero_passo?: number
+          titulo_passo?: string | null
+          tutorial_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tutoriais_passos_tutorial_id_fkey"
+            columns: ["tutorial_id"]
+            isOneToOne: false
+            referencedRelation: "tutoriais"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_tokens: {
+        Row: {
+          created_at: string | null
+          expiry: string
+          id: number
+          token: string
+          usuario_id: number
+        }
+        Insert: {
+          created_at?: string | null
+          expiry: string
+          id?: number
+          token: string
+          usuario_id: number
+        }
+        Update: {
+          created_at?: string | null
+          expiry?: string
+          id?: number
+          token?: string
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_tokens_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       usuarios: {
         Row: {
-          ativo: number | null
+          avatar: string | null
           cpf: string | null
-          created_at: string | null
+          data_cadastro: string | null
+          data_contratacao: string
+          data_nascimento: string | null
+          email: string | null
           id: number
           login: string
-          loja_id: number | null
+          loja_id: number
           matricula: string | null
           nome: string
           permissao: number | null
+          porcentagem_comissao_conveniencia: number | null
+          porcentagem_comissao_dermocosmetico: number | null
+          porcentagem_comissao_generico: number | null
+          porcentagem_comissao_goodlife: number | null
+          porcentagem_comissao_perfumaria_alta: number | null
+          porcentagem_comissao_similar: number | null
           senha: string
-          senha_provisoria: number | null
-          tipo: string
-          updated_at: string | null
+          senha_provisoria: boolean | null
+          status: Database["public"]["Enums"]["user_status"] | null
+          tipo: Database["public"]["Enums"]["user_tipo"]
         }
         Insert: {
-          ativo?: number | null
+          avatar?: string | null
           cpf?: string | null
-          created_at?: string | null
-          id: number
+          data_cadastro?: string | null
+          data_contratacao: string
+          data_nascimento?: string | null
+          email?: string | null
+          id?: number
           login: string
-          loja_id?: number | null
+          loja_id?: number
           matricula?: string | null
           nome: string
           permissao?: number | null
+          porcentagem_comissao_conveniencia?: number | null
+          porcentagem_comissao_dermocosmetico?: number | null
+          porcentagem_comissao_generico?: number | null
+          porcentagem_comissao_goodlife?: number | null
+          porcentagem_comissao_perfumaria_alta?: number | null
+          porcentagem_comissao_similar?: number | null
           senha: string
-          senha_provisoria?: number | null
-          tipo: string
-          updated_at?: string | null
+          senha_provisoria?: boolean | null
+          status?: Database["public"]["Enums"]["user_status"] | null
+          tipo: Database["public"]["Enums"]["user_tipo"]
         }
         Update: {
-          ativo?: number | null
+          avatar?: string | null
           cpf?: string | null
-          created_at?: string | null
+          data_cadastro?: string | null
+          data_contratacao?: string
+          data_nascimento?: string | null
+          email?: string | null
           id?: number
           login?: string
-          loja_id?: number | null
+          loja_id?: number
           matricula?: string | null
           nome?: string
           permissao?: number | null
+          porcentagem_comissao_conveniencia?: number | null
+          porcentagem_comissao_dermocosmetico?: number | null
+          porcentagem_comissao_generico?: number | null
+          porcentagem_comissao_goodlife?: number | null
+          porcentagem_comissao_perfumaria_alta?: number | null
+          porcentagem_comissao_similar?: number | null
           senha?: string
-          senha_provisoria?: number | null
-          tipo?: string
-          updated_at?: string | null
+          senha_provisoria?: boolean | null
+          status?: Database["public"]["Enums"]["user_status"] | null
+          tipo?: Database["public"]["Enums"]["user_tipo"]
         }
         Relationships: [
           {
@@ -246,51 +2421,70 @@ export type Database = {
           },
         ]
       }
+      usuarios_recusados: {
+        Row: {
+          data_registro: string | null
+          id: number
+          motivo: string | null
+          usuario_id: number
+        }
+        Insert: {
+          data_registro?: string | null
+          id?: number
+          motivo?: string | null
+          usuario_id: number
+        }
+        Update: {
+          data_registro?: string | null
+          id?: number
+          motivo?: string | null
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "usuarios_recusados_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vendas: {
         Row: {
-          atualizado_por_usuario_id: number | null
-          categoria: string
-          data_atualizacao: string | null
+          categoria: Database["public"]["Enums"]["categoria_venda"]
           data_registro: string | null
           data_venda: string
           id: number
+          observacoes: string | null
           registrado_por_usuario_id: number | null
           usuario_id: number
           valor_comissao: number
           valor_venda: number
         }
         Insert: {
-          atualizado_por_usuario_id?: number | null
-          categoria: string
-          data_atualizacao?: string | null
+          categoria: Database["public"]["Enums"]["categoria_venda"]
           data_registro?: string | null
           data_venda: string
           id?: number
+          observacoes?: string | null
           registrado_por_usuario_id?: number | null
           usuario_id: number
-          valor_comissao?: number
-          valor_venda?: number
+          valor_comissao: number
+          valor_venda: number
         }
         Update: {
-          atualizado_por_usuario_id?: number | null
-          categoria?: string
-          data_atualizacao?: string | null
+          categoria?: Database["public"]["Enums"]["categoria_venda"]
           data_registro?: string | null
           data_venda?: string
           id?: number
+          observacoes?: string | null
           registrado_por_usuario_id?: number | null
           usuario_id?: number
           valor_comissao?: number
           valor_venda?: number
         }
         Relationships: [
-          {
-            foreignKeyName: "vendas_atualizado_por_usuario_id_fkey"
-            columns: ["atualizado_por_usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "vendas_registrado_por_usuario_id_fkey"
             columns: ["registrado_por_usuario_id"]
@@ -309,46 +2503,39 @@ export type Database = {
       }
       vendas_loja: {
         Row: {
-          atualizado_por_usuario_id: number | null
           categoria: string
-          data_atualizacao: string | null
           data_registro: string | null
           data_venda: string
           id: number
           loja_id: number
+          observacao: number | null
+          quantidade: number
           registrado_por_usuario_id: number | null
           valor_venda: number
         }
         Insert: {
-          atualizado_por_usuario_id?: number | null
           categoria: string
-          data_atualizacao?: string | null
           data_registro?: string | null
           data_venda: string
           id?: number
           loja_id: number
+          observacao?: number | null
+          quantidade?: number
           registrado_por_usuario_id?: number | null
           valor_venda?: number
         }
         Update: {
-          atualizado_por_usuario_id?: number | null
           categoria?: string
-          data_atualizacao?: string | null
           data_registro?: string | null
           data_venda?: string
           id?: number
           loja_id?: number
+          observacao?: number | null
+          quantidade?: number
           registrado_por_usuario_id?: number | null
           valor_venda?: number
         }
         Relationships: [
-          {
-            foreignKeyName: "vendas_loja_atualizado_por_usuario_id_fkey"
-            columns: ["atualizado_por_usuario_id"]
-            isOneToOne: false
-            referencedRelation: "usuarios"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "vendas_loja_loja_id_fkey"
             columns: ["loja_id"]
@@ -373,7 +2560,67 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      arquivo_tipo: "avatar" | "documento" | "comprovante" | "outro"
+      banco_status: "ativo" | "inativo"
+      campanha_status: "ativa" | "inativa" | "encerrada"
+      campanha_tipo: "valor" | "quantidade"
+      categoria_meta:
+        | "geral"
+        | "generico_similar"
+        | "goodlife"
+        | "perfumaria_alta"
+        | "dermocosmetico"
+      categoria_venda:
+        | "geral"
+        | "similar"
+        | "generico"
+        | "dermocosmetico"
+        | "goodlife"
+        | "perfumaria_alta"
+        | "rentaveis20"
+        | "rentaveis25"
+        | "conveniencia"
+        | "brinquedo"
+      correcao_status: "pendente" | "aprovado" | "rejeitado"
+      correcao_tipo: "entrada" | "saida" | "intervalo" | "jornada" | "outro"
+      feriado_tipo: "nacional" | "estadual" | "municipal" | "corporativo"
+      ferias_acao:
+        | "solicitado"
+        | "encaminhado"
+        | "aprovado"
+        | "rejeitado"
+        | "cancelado"
+      ferias_status:
+        | "pendente"
+        | "pendente_aprovacao"
+        | "aprovado"
+        | "rejeitado"
+        | "cancelado"
+      notificacao_tipo: "info" | "aviso" | "urgente"
+      ocorrencia_status: "pendente" | "respondido" | "resolvido"
+      orcamento_status: "ativo" | "concluido" | "cancelado" | "expirado"
+      periodo_status: "ativo" | "inativo"
+      pico_nivel: "baixo" | "medio" | "alto"
+      prioridade_tipo: "baixa" | "media" | "alta"
+      regiao_tipo: "centro" | "outros"
+      registro_status: "normal" | "incompleto" | "folga" | "ferias" | "atestado"
+      relatorio_status: "pendente" | "analisado" | "corrigido" | "ok"
+      user_status: "ativo" | "inativo" | "bloqueado" | "recusado" | "pendente"
+      user_tipo:
+        | "gerente"
+        | "farmaceutico"
+        | "auxiliar"
+        | "consultora"
+        | "aux_conveniencia"
+        | "lider"
+        | "aux1"
+        | "fiscal"
+        | "zelador"
+        | "sub"
+        | "subfarma"
+        | "treinador"
+        | "desenvolvedor"
+        | "estagiario"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -500,6 +2747,73 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      arquivo_tipo: ["avatar", "documento", "comprovante", "outro"],
+      banco_status: ["ativo", "inativo"],
+      campanha_status: ["ativa", "inativa", "encerrada"],
+      campanha_tipo: ["valor", "quantidade"],
+      categoria_meta: [
+        "geral",
+        "generico_similar",
+        "goodlife",
+        "perfumaria_alta",
+        "dermocosmetico",
+      ],
+      categoria_venda: [
+        "geral",
+        "similar",
+        "generico",
+        "dermocosmetico",
+        "goodlife",
+        "perfumaria_alta",
+        "rentaveis20",
+        "rentaveis25",
+        "conveniencia",
+        "brinquedo",
+      ],
+      correcao_status: ["pendente", "aprovado", "rejeitado"],
+      correcao_tipo: ["entrada", "saida", "intervalo", "jornada", "outro"],
+      feriado_tipo: ["nacional", "estadual", "municipal", "corporativo"],
+      ferias_acao: [
+        "solicitado",
+        "encaminhado",
+        "aprovado",
+        "rejeitado",
+        "cancelado",
+      ],
+      ferias_status: [
+        "pendente",
+        "pendente_aprovacao",
+        "aprovado",
+        "rejeitado",
+        "cancelado",
+      ],
+      notificacao_tipo: ["info", "aviso", "urgente"],
+      ocorrencia_status: ["pendente", "respondido", "resolvido"],
+      orcamento_status: ["ativo", "concluido", "cancelado", "expirado"],
+      periodo_status: ["ativo", "inativo"],
+      pico_nivel: ["baixo", "medio", "alto"],
+      prioridade_tipo: ["baixa", "media", "alta"],
+      regiao_tipo: ["centro", "outros"],
+      registro_status: ["normal", "incompleto", "folga", "ferias", "atestado"],
+      relatorio_status: ["pendente", "analisado", "corrigido", "ok"],
+      user_status: ["ativo", "inativo", "bloqueado", "recusado", "pendente"],
+      user_tipo: [
+        "gerente",
+        "farmaceutico",
+        "auxiliar",
+        "consultora",
+        "aux_conveniencia",
+        "lider",
+        "aux1",
+        "fiscal",
+        "zelador",
+        "sub",
+        "subfarma",
+        "treinador",
+        "desenvolvedor",
+        "estagiario",
+      ],
+    },
   },
 } as const
