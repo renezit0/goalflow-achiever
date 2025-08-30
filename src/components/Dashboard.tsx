@@ -32,47 +32,36 @@ function DashboardContent() {
 
   return (
     <div className="p-6 space-y-8 bg-gradient-to-br from-background via-muted/5 to-accent/5 min-h-screen">
-      {/* Modern Hero Section */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-gray-900 via-black to-yellow-500 p-8 text-white shadow-2xl">
-        <div className="relative z-10">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                  <i className="fas fa-crown text-2xl text-yellow-300"></i>
-                </div>
-                <div>
-                  <h1 className="text-3xl font-bold">Olá, {user.nome}!</h1>
-                  <p className="text-white/80">Loja {user.loja_id} • {user.tipo?.toUpperCase()}</p>
-                </div>
-              </div>
-              <p className="text-lg text-white/90 max-w-lg">
-                Acompanhe suas metas, vendas e performance em tempo real
-                {selectedPeriod && (
-                  <span className="block text-sm text-white/70 mt-1">
-                    Período: {selectedPeriod.label}
-                  </span>
-                )}
-              </p>
+      {/* Clean Hero Section */}
+      <div className="relative overflow-hidden rounded-2xl bg-white border border-border p-8 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-3">
+            <div>
+              <h1 className="text-3xl font-bold text-foreground">Olá, {user.nome}!</h1>
+              <p className="text-muted-foreground">Loja {user.loja_id} • {user.tipo?.toUpperCase()}</p>
             </div>
-            
-            <div className="flex flex-wrap gap-3">
-              <PeriodSelector />
-              <Button variant="secondary" className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border-white/20">
-                <i className="fas fa-chart-line mr-2"></i>
-                Relatórios
-              </Button>
-              <Button variant="secondary" className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold">
-                <i className="fas fa-trophy mr-2"></i>
-                Premiações
-              </Button>
-            </div>
+            <p className="text-lg text-muted-foreground max-w-lg">
+              Acompanhe suas metas, vendas e performance em tempo real
+              {selectedPeriod && (
+                <span className="block text-sm text-muted-foreground/70 mt-1">
+                  Período: {selectedPeriod.label}
+                </span>
+              )}
+            </p>
+          </div>
+          
+          <div className="flex flex-wrap gap-3">
+            <PeriodSelector />
+            <Button variant="outline" className="border-border hover:bg-muted">
+              <i className="fas fa-chart-line mr-2"></i>
+              Relatórios
+            </Button>
+            <Button variant="default" className="bg-primary hover:bg-primary/90">
+              <i className="fas fa-trophy mr-2"></i>
+              Premiações
+            </Button>
           </div>
         </div>
-        
-        {/* Decorative elements */}
-        <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
-        <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-yellow-500/20 rounded-full blur-2xl"></div>
       </div>
 
       {/* Quick Actions */}
