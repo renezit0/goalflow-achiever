@@ -1,6 +1,7 @@
 import { MetricCard } from "./MetricCard";
 import { DashboardSidebar } from "./DashboardSidebar";
 import { MobileSidebar } from "./MobileSidebar";
+import { PeriodSelector } from "./PeriodSelector";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Share2, BarChart3, Calendar, Trophy, LogOut } from "lucide-react";
@@ -68,10 +69,7 @@ export function Dashboard() {
                   Compartilhar Metas
                 </Button>
                 
-                <Button variant="outline" size="sm">
-                  <Calendar className="w-4 h-4 mr-2" />
-                  <span className="hidden sm:inline">{periodo.label}</span>
-                </Button>
+                <PeriodSelector />
 
                 <Button className="bg-warning hover:bg-warning/90 text-warning-foreground hidden sm:flex">
                   <BarChart3 className="w-4 h-4 mr-2" />

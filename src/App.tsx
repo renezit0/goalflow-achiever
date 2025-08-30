@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Campanhas from "./pages/Campanhas";
 import Vendas from "./pages/Vendas";
 import Metas from "./pages/Metas";
+import MetasLojaPage from "./pages/MetasLojaPage";
 import Relatorios from "./pages/Relatorios";
 import Usuarios from "./pages/Usuarios";
 import Configuracoes from "./pages/Configuracoes";
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/campanhas" element={<Campanhas />} />
           <Route path="/vendas" element={<Vendas />} />
           <Route path="/metas" element={<Metas />} />
+          <Route path="/metas-loja" element={<MetasLojaPage />} />
           <Route path="/relatorios" element={<Relatorios />} />
           <Route path="/usuarios" element={<Usuarios />} />
           <Route path="/configuracoes" element={<Configuracoes />} />

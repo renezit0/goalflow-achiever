@@ -7,7 +7,8 @@ import {
   Users,
   Target,
   FileText,
-  Calendar
+  Calendar,
+  Store
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -25,6 +26,7 @@ const sidebarItems: SidebarItem[] = [
   { icon: Home, label: "Dashboard", href: "/" },
   { icon: TrendingUp, label: "Vendas", href: "/vendas" },
   { icon: Target, label: "Metas", href: "/metas" },
+  { icon: Store, label: "Metas da Loja", href: "/metas-loja" },
   { icon: BarChart3, label: "Campanhas", href: "/campanhas" },
   { icon: FileText, label: "Relatórios", href: "/relatorios" },
   { icon: Users, label: "Usuários", href: "/usuarios" },
