@@ -14,7 +14,357 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      lojas: {
+        Row: {
+          created_at: string | null
+          endereco: string | null
+          id: number
+          nome: string
+          status: string | null
+          telefone: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          endereco?: string | null
+          id?: number
+          nome: string
+          status?: string | null
+          telefone?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          endereco?: string | null
+          id?: number
+          nome?: string
+          status?: string | null
+          telefone?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      metas: {
+        Row: {
+          categoria: string
+          created_at: string | null
+          id: number
+          meta_mensal: number
+          periodo_meta_id: number
+          updated_at: string | null
+          usuario_id: number
+        }
+        Insert: {
+          categoria: string
+          created_at?: string | null
+          id?: number
+          meta_mensal?: number
+          periodo_meta_id: number
+          updated_at?: string | null
+          usuario_id: number
+        }
+        Update: {
+          categoria?: string
+          created_at?: string | null
+          id?: number
+          meta_mensal?: number
+          periodo_meta_id?: number
+          updated_at?: string | null
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "metas_periodo_meta_id_fkey"
+            columns: ["periodo_meta_id"]
+            isOneToOne: false
+            referencedRelation: "periodos_meta"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "metas_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      metas_loja: {
+        Row: {
+          created_at: string | null
+          id: number
+          loja_id: number
+          meta_valor_total: number
+          periodo_meta_id: number
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          loja_id: number
+          meta_valor_total?: number
+          periodo_meta_id: number
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          loja_id?: number
+          meta_valor_total?: number
+          periodo_meta_id?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "metas_loja_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "metas_loja_periodo_meta_id_fkey"
+            columns: ["periodo_meta_id"]
+            isOneToOne: false
+            referencedRelation: "periodos_meta"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      metas_loja_categorias: {
+        Row: {
+          categoria: string
+          id: number
+          meta_loja_id: number
+          meta_valor: number
+        }
+        Insert: {
+          categoria: string
+          id?: number
+          meta_loja_id: number
+          meta_valor?: number
+        }
+        Update: {
+          categoria?: string
+          id?: number
+          meta_loja_id?: number
+          meta_valor?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "metas_loja_categorias_meta_loja_id_fkey"
+            columns: ["meta_loja_id"]
+            isOneToOne: false
+            referencedRelation: "metas_loja"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      periodos_meta: {
+        Row: {
+          created_at: string | null
+          data_fim: string
+          data_inicio: string
+          id: number
+          nome: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          data_fim: string
+          data_inicio: string
+          id?: number
+          nome: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          data_fim?: string
+          data_inicio?: string
+          id?: number
+          nome?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      usuarios: {
+        Row: {
+          ativo: number | null
+          cpf: string | null
+          created_at: string | null
+          id: number
+          login: string
+          loja_id: number | null
+          matricula: string | null
+          nome: string
+          permissao: number | null
+          senha: string
+          senha_provisoria: number | null
+          tipo: string
+          updated_at: string | null
+        }
+        Insert: {
+          ativo?: number | null
+          cpf?: string | null
+          created_at?: string | null
+          id: number
+          login: string
+          loja_id?: number | null
+          matricula?: string | null
+          nome: string
+          permissao?: number | null
+          senha: string
+          senha_provisoria?: number | null
+          tipo: string
+          updated_at?: string | null
+        }
+        Update: {
+          ativo?: number | null
+          cpf?: string | null
+          created_at?: string | null
+          id?: number
+          login?: string
+          loja_id?: number | null
+          matricula?: string | null
+          nome?: string
+          permissao?: number | null
+          senha?: string
+          senha_provisoria?: number | null
+          tipo?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "usuarios_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendas: {
+        Row: {
+          atualizado_por_usuario_id: number | null
+          categoria: string
+          data_atualizacao: string | null
+          data_registro: string | null
+          data_venda: string
+          id: number
+          registrado_por_usuario_id: number | null
+          usuario_id: number
+          valor_comissao: number
+          valor_venda: number
+        }
+        Insert: {
+          atualizado_por_usuario_id?: number | null
+          categoria: string
+          data_atualizacao?: string | null
+          data_registro?: string | null
+          data_venda: string
+          id?: number
+          registrado_por_usuario_id?: number | null
+          usuario_id: number
+          valor_comissao?: number
+          valor_venda?: number
+        }
+        Update: {
+          atualizado_por_usuario_id?: number | null
+          categoria?: string
+          data_atualizacao?: string | null
+          data_registro?: string | null
+          data_venda?: string
+          id?: number
+          registrado_por_usuario_id?: number | null
+          usuario_id?: number
+          valor_comissao?: number
+          valor_venda?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendas_atualizado_por_usuario_id_fkey"
+            columns: ["atualizado_por_usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendas_registrado_por_usuario_id_fkey"
+            columns: ["registrado_por_usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendas_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendas_loja: {
+        Row: {
+          atualizado_por_usuario_id: number | null
+          categoria: string
+          data_atualizacao: string | null
+          data_registro: string | null
+          data_venda: string
+          id: number
+          loja_id: number
+          registrado_por_usuario_id: number | null
+          valor_venda: number
+        }
+        Insert: {
+          atualizado_por_usuario_id?: number | null
+          categoria: string
+          data_atualizacao?: string | null
+          data_registro?: string | null
+          data_venda: string
+          id?: number
+          loja_id: number
+          registrado_por_usuario_id?: number | null
+          valor_venda?: number
+        }
+        Update: {
+          atualizado_por_usuario_id?: number | null
+          categoria?: string
+          data_atualizacao?: string | null
+          data_registro?: string | null
+          data_venda?: string
+          id?: number
+          loja_id?: number
+          registrado_por_usuario_id?: number | null
+          valor_venda?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendas_loja_atualizado_por_usuario_id_fkey"
+            columns: ["atualizado_por_usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendas_loja_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendas_loja_registrado_por_usuario_id_fkey"
+            columns: ["registrado_por_usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
