@@ -105,9 +105,18 @@ export default function MetasLojaPage() {
 
       for (const categoria of categorias) {
         // Buscar meta da categoria
-        const metaCategoria = metasLoja?.[0]?.metas_loja_categorias?.find(
-          (m: any) => m.categoria === categoria.id
-        );
+        let metaValor = 0;
+        
+        if (categoria.id === 'geral') {
+          // Para categoria geral, usar meta_valor_total da metas_loja
+          metaValor = metasLoja?.[0]?.meta_valor_total || 0;
+        } else {
+          // Para outras categorias, buscar na metas_loja_categorias
+          const metaCategoria = metasLoja?.[0]?.metas_loja_categorias?.find(
+            (m: any) => m.categoria === categoria.id
+          );
+          metaValor = metaCategoria?.meta_valor || 0;
+        }
 
         // Somar vendas da categoria
         const vendasCategoria = vendasLoja?.filter(
@@ -115,7 +124,6 @@ export default function MetasLojaPage() {
         ) || [];
         
         const totalVendido = vendasCategoria.reduce((sum: number, v: any) => sum + Number(v.valor_venda), 0);
-        const metaValor = metaCategoria?.meta_valor || 0;
         const progresso = metaValor > 0 ? (totalVendido / metaValor) * 100 : 0;
         const restante = Math.max(0, metaValor - totalVendido);
         
