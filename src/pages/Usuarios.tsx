@@ -55,15 +55,16 @@ export default function Usuarios() {
       const { data, error } = await supabase
         .from('usuarios')
         .select('*')
+        .eq('loja_id', user?.loja_id) // Filtrar apenas usuários da mesma loja
         .order('nome');
 
       if (error) throw error;
       
       // Mapear os dados para o tipo correto
-      const mappedUsuarios = (data || []).map(user => ({
-        ...user,
-        permissao: Number(user.permissao) || 0,
-        CPF: user.CPF || null
+      const mappedUsuarios = (data || []).map(userRow => ({
+        ...userRow,
+        permissao: Number(userRow.permissao) || 0,
+        CPF: userRow.CPF || null
       }));
       
       setUsuarios(mappedUsuarios);
@@ -134,10 +135,10 @@ export default function Usuarios() {
                 <MobileSidebar />
                 <div>
                   <h1 className="text-xl font-semibold text-foreground">
-                    Gerenciar Usuários
+                    Usuários da Loja {user?.loja_id}
                   </h1>
                   <p className="text-sm text-muted-foreground">
-                    Visualize e gerencie os usuários do sistema
+                    Gerencie os colaboradores da sua loja
                   </p>
                 </div>
               </div>
