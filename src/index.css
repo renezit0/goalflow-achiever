@@ -129,6 +129,7 @@
     --secondary-hsl: 340 100% 75%;
   }
 
+  :root {
     --radius: 0.75rem;
 
     /* Extended Color System */
@@ -224,7 +225,6 @@
     --sidebar-border: 220 15% 22%;
     --sidebar-ring: 224 76% 48%;
   }
-}
 
 @layer base {
   * {
