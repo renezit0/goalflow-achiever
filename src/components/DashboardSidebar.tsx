@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import miniIconWhite from "@/assets/mini-icon-white.png";
+import { getDescricaoTipoUsuario } from "@/utils/userTypes";
 
 interface SidebarItem {
   icon: string;
@@ -90,7 +91,7 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
             {user?.nome}
           </div>
           <div className="user-role text-white/60 text-xs truncate capitalize">
-            {user?.tipo}
+            {getDescricaoTipoUsuario(user?.tipo || '')}
           </div>
         </div>
         <Button

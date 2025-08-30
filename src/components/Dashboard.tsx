@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useDashboardData } from "@/hooks/useDashboardData";
 import { usePeriodContext } from "@/contexts/PeriodContext";
 import { Navigate } from "react-router-dom";
+import { getDescricaoTipoUsuario } from "@/utils/userTypes";
 
 function DashboardContent() {
   const { user, loading: authLoading } = useAuth();
@@ -38,7 +39,7 @@ function DashboardContent() {
           <div className="space-y-3">
             <div>
               <h1 className="text-3xl font-bold text-foreground">Olá, {user.nome}!</h1>
-              <p className="text-muted-foreground">Loja {user.loja_id} • {user.tipo?.toUpperCase()}</p>
+              <p className="text-muted-foreground">Loja {user.loja_id} • {getDescricaoTipoUsuario(user.tipo || '')}</p>
             </div>
             <p className="text-lg text-muted-foreground max-w-lg">
               Acompanhe suas metas, vendas e performance em tempo real

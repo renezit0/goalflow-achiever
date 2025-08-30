@@ -11,6 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Search, Plus, Edit, Trash2 } from 'lucide-react';
 import { Navigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { getDescricaoTipoUsuario, getCorTipoUsuario, getTiposUsuario } from '@/utils/userTypes';
 
 interface Usuario {
   id: number;
@@ -111,17 +112,9 @@ export default function Usuarios() {
   };
 
   const getTipoBadge = (tipo: string) => {
-    const colors: Record<string, string> = {
-      gerente: 'bg-primary text-primary-foreground',
-      farmaceutico: 'bg-blue-500 text-white',
-      auxiliar: 'bg-green-500 text-white',
-      consultora: 'bg-purple-500 text-white',
-      lider: 'bg-orange-500 text-white'
-    };
-    
     return (
-      <Badge className={colors[tipo] || 'bg-gray-500 text-white'}>
-        {tipo.charAt(0).toUpperCase() + tipo.slice(1)}
+      <Badge className={getCorTipoUsuario(tipo)}>
+        {getDescricaoTipoUsuario(tipo)}
       </Badge>
     );
   };
@@ -187,11 +180,11 @@ export default function Usuarios() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos os Tipos</SelectItem>
-                <SelectItem value="gerente">Gerente</SelectItem>
-                <SelectItem value="farmaceutico">Farmacêutico</SelectItem>
-                <SelectItem value="auxiliar">Auxiliar</SelectItem>
-                <SelectItem value="consultora">Consultora</SelectItem>
-                <SelectItem value="lider">Líder</SelectItem>
+                {getTiposUsuario().map((tipo) => (
+                  <SelectItem key={tipo.value} value={tipo.value}>
+                    {tipo.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
 

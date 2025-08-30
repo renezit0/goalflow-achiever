@@ -71,37 +71,38 @@
 
   /* User type specific colors */
   
-  /* Auxiliar (Blue) */
-  body.user-type-auxiliar,
-  body.user-type-aux1 {
-    --primary: #1565c0;
-    --primary-light: #42a5f5;
-    --primary-dark: #0d47a1;
-    --secondary: #64b5f6;
-    --secondary-light: #9be7ff;
-    --secondary-dark: #2286c3;
+  /* Administrador (Red) */
+  body.user-type-admin {
+    --primary: #d32f2f;
+    --primary-light: #f44336;
+    --primary-dark: #b71c1c;
+    --secondary: #ffcdd2;
+    --secondary-light: #ffebee;
+    --secondary-dark: #c62828;
     --text-on-primary: #ffffff;
     --text-on-secondary: #000000;
-    --primary-hsl: 211 87% 42%;
-    --secondary-hsl: 210 79% 69%;
+    --primary-hsl: 356 75% 53%;
+    --secondary-hsl: 356 46% 86%;
   }
   
-  /* Conveniência (Black) */
-  body.user-type-aux_conveniencia {
+  /* Gerente/Líder - Gerente Loja (Black/Gold) */
+  body.user-type-gerente,
+  body.user-type-lider {
     --primary: #212121;
     --primary-light: #484848;
     --primary-dark: #000000;
-    --secondary: #424242;
-    --secondary-light: #616161;
-    --secondary-dark: #212121;
+    --secondary: #ffbe0b;
+    --secondary-light: #ffd634;
+    --secondary-dark: #e6ab0a;
     --text-on-primary: #ffffff;
-    --text-on-secondary: #ffffff;
+    --text-on-secondary: #000000;
     --primary-hsl: 0 0% 13%;
-    --secondary-hsl: 0 0% 26%;
+    --secondary-hsl: 45 96% 53%;
   }
   
-  /* Farmacêutico (Turquoise) */
-  body.user-type-farmaceutico {
+  /* Farmacêutico/SUB (Turquoise) */
+  body.user-type-farmaceutico,
+  body.user-type-subgerente {
     --primary: #00838f;
     --primary-light: #26c6da;
     --primary-dark: #006064;
@@ -114,9 +115,51 @@
     --secondary-hsl: 187 65% 59%;
   }
   
-  /* Consultora (Pink) */
-  body.user-type-consultora,
-  body.user-type-estagiario {
+  /* Auxiliar de Farmácia II/SUB (Blue) */
+  body.user-type-auxiliar,
+  body.user-type-sublider {
+    --primary: #1565c0;
+    --primary-light: #42a5f5;
+    --primary-dark: #0d47a1;
+    --secondary: #64b5f6;
+    --secondary-light: #9be7ff;
+    --secondary-dark: #2286c3;
+    --text-on-primary: #ffffff;
+    --text-on-secondary: #000000;
+    --primary-hsl: 211 87% 42%;
+    --secondary-hsl: 210 79% 69%;
+  }
+
+  /* Auxiliar de Farmácia I (Light Blue) */
+  body.user-type-aux1 {
+    --primary: #1976d2;
+    --primary-light: #64b5f6;
+    --primary-dark: #1565c0;
+    --secondary: #90caf9;
+    --secondary-light: #bbdefb;
+    --secondary-dark: #42a5f5;
+    --text-on-primary: #ffffff;
+    --text-on-secondary: #000000;
+    --primary-hsl: 211 71% 47%;
+    --secondary-hsl: 211 65% 78%;
+  }
+  
+  /* Auxiliar de Farmácia - Conveniência (Orange) */
+  body.user-type-aux_conveniencia {
+    --primary: #f57c00;
+    --primary-light: #ffb74d;
+    --primary-dark: #e65100;
+    --secondary: #ffcc02;
+    --secondary-light: #fff176;
+    --secondary-dark: #ff8f00;
+    --text-on-primary: #ffffff;
+    --text-on-secondary: #000000;
+    --primary-hsl: 35 100% 48%;
+    --secondary-hsl: 50 100% 50%;
+  }
+  
+  /* Consultora de Beleza (Pink) */
+  body.user-type-consultora {
     --primary: #e91e63;
     --primary-light: #f48fb1;
     --primary-dark: #c2185b;
