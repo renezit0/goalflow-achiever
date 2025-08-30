@@ -528,6 +528,26 @@
     transition: transform 0.2s ease;
   }
 
+  /* Main sidebar styling */
+  .sidebar {
+    width: 70px;
+    height: 100vh;
+    background: #212121;
+    position: fixed;
+    z-index: 1000;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .sidebar:hover,
+  .sidebar.expanded {
+    width: 220px;
+  }
+
   /* Responsive sidebar */
   @media (max-width: 1024px) {
     .sidebar {

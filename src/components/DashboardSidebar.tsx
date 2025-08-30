@@ -31,7 +31,7 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
 
   return (
     <div className={cn(
-      "sidebar fixed z-50 flex flex-col h-full bg-primary text-white shadow-lg transition-all duration-300 ease-in-out",
+      "sidebar fixed z-50 flex flex-col h-full text-white shadow-lg transition-all duration-300 ease-in-out",
       "w-[70px] hover:w-[220px] group",
       className
     )}>
@@ -85,7 +85,7 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
       </nav>
 
       {/* User Profile Footer */}
-      <div className="user-profile flex items-center p-3 border-t border-white/10 sticky bottom-0 bg-primary">
+      <div className="user-profile flex items-center p-3 border-t border-white/10 sticky bottom-0">
         <div className="user-avatar w-10 h-10 bg-secondary rounded-full flex items-center justify-center text-white font-bold text-sm">
           {user?.nome?.charAt(0) || "U"}
         </div>
