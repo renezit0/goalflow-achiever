@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import logo from "@/assets/logo.png";
+import miniIconWhite from "@/assets/mini-icon-white.png";
 
 interface SidebarItem {
   icon: string;
@@ -40,7 +40,7 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
       <div className="sidebar-header flex items-center justify-center p-3 mb-3">
         <div className="sidebar-logo flex items-center">
           <div className="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden bg-white/10">
-            <img src={logo} alt="Logo" className="w-8 h-8 object-contain" />
+            <img src={miniIconWhite} alt="Logo" className="w-8 h-8 object-contain" />
           </div>
         </div>
       </div>
