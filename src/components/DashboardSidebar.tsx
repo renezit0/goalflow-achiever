@@ -27,7 +27,7 @@ interface DashboardSidebarProps {
 
 export function DashboardSidebar({ className }: DashboardSidebarProps) {
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   return (
     <div className={cn(
@@ -41,17 +41,6 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
           <div className="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden bg-white/10">
             <img src={logo} alt="Logo" className="w-8 h-8 object-contain" />
           </div>
-          <div className="logo-text ml-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            <span className="text-lg font-semibold">Loja {user?.loja_id}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* User Info - Show on hover */}
-      <div className="px-3 pb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-        <div className="text-xs text-white/60 text-center">
-          <p className="capitalize">{user?.tipo}</p>
-          <p>Olá, {user?.nome}</p>
         </div>
       </div>
 
@@ -89,7 +78,7 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
         <div className="user-avatar w-10 h-10 bg-secondary rounded-full flex items-center justify-center text-white font-bold text-sm">
           {user?.nome?.charAt(0) || "U"}
         </div>
-        <div className="user-info ml-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 overflow-hidden">
+        <div className="user-info ml-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 overflow-hidden flex-1">
           <div className="user-name text-white font-semibold text-sm truncate">
             {user?.nome}
           </div>
@@ -97,6 +86,14 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
             {user?.tipo}
           </div>
         </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={logout}
+          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 ml-2 text-white hover:bg-white/10 hover:text-white"
+        >
+          <i className="fas fa-sign-out-alt text-sm"></i>
+        </Button>
       </div>
     </div>
   );
