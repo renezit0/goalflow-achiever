@@ -57,7 +57,8 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
               className={cn(
                 "nav-item flex items-center p-3 rounded-lg text-white/80 transition-all duration-150 relative",
                 "hover:bg-white/8 hover:text-white",
-                isActive && "active bg-white/10 text-white border-l-3 border-l-secondary pl-[10px]"
+                isActive && "active bg-white/10 text-white border-l-3 border-l-secondary pl-[10px]",
+                !className?.includes('expanded') && "justify-center"
               )}
             >
               <div className={cn(
@@ -78,7 +79,10 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
       </nav>
 
       {/* User Profile Footer */}
-      <div className="user-profile flex items-center p-3 border-t border-white/10 sticky bottom-0">
+      <div className={cn(
+        "user-profile flex items-center p-3 border-t border-white/10 sticky bottom-0",
+        !className?.includes('expanded') && "justify-center"
+      )}>
         <div className="user-avatar w-10 h-10 bg-secondary rounded-full flex items-center justify-center text-white font-bold text-sm">
           {user?.nome?.charAt(0) || "U"}
         </div>
