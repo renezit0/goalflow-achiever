@@ -31,7 +31,7 @@ export default function Usuarios() {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('ativo'); // Por padrão mostrar apenas ativos
   const [tipoFilter, setTipoFilter] = useState<string>('all');
 
   // useEffect must be called before any early returns
@@ -86,8 +86,8 @@ export default function Usuarios() {
 
   const filteredUsuarios = usuarios.filter(usuario => {
     const matchesSearch = usuario.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         usuario.login.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (usuario.matricula && usuario.matricula.toLowerCase().includes(searchTerm.toLowerCase()));
+                         (usuario.matricula && usuario.matricula.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                         (usuario.email && usuario.email.toLowerCase().includes(searchTerm.toLowerCase()));
     
     const matchesStatus = statusFilter === 'all' || usuario.status === statusFilter;
     const matchesTipo = tipoFilter === 'all' || usuario.tipo === tipoFilter;
@@ -126,6 +126,11 @@ export default function Usuarios() {
     );
   };
 
+  const handleEdit = (userId: number) => {
+    toast.info('Funcionalidade de edição em desenvolvimento');
+    // TODO: Implementar edição de usuário
+  };
+
   return (
     <div className="p-6 space-y-6 bg-background min-h-screen">
       {/* Header */}
@@ -152,11 +157,11 @@ export default function Usuarios() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="relative">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="relative md:col-span-2 lg:col-span-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input
-                placeholder="Buscar por nome, login ou matrícula..."
+                placeholder="Buscar por nome, matrícula ou email..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -190,8 +195,10 @@ export default function Usuarios() {
               </SelectContent>
             </Select>
 
-            <div className="text-sm text-muted-foreground flex items-center">
-              Total: {filteredUsuarios.length} usuários
+            <div className="text-sm text-muted-foreground flex items-center justify-center md:justify-start">
+              <span className="bg-muted px-3 py-1 rounded-full">
+                Total: {filteredUsuarios.length} usuário{filteredUsuarios.length !== 1 ? 's' : ''}
+              </span>
             </div>
           </div>
         </CardContent>
@@ -202,72 +209,131 @@ export default function Usuarios() {
         <CardHeader>
           <CardTitle>Lista de Usuários</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           {loading ? (
             <div className="text-center py-8 text-muted-foreground">
               Carregando usuários...
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Usuário</TableHead>
-                    <TableHead>Login</TableHead>
-                    <TableHead>Tipo</TableHead>
-                    <TableHead>Loja</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Permissão</TableHead>
-                    <TableHead>Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredUsuarios.map((usuario) => (
-                    <TableRow key={usuario.id}>
-                      <TableCell>
-                        <div className="flex items-center space-x-3">
-                          <Avatar className="w-8 h-8">
-                            <AvatarFallback className="text-xs">
-                              {usuario.nome.charAt(0).toUpperCase()}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="font-medium">{usuario.nome}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {usuario.matricula || 'Sem matrícula'}
-                            </p>
-                          </div>
+            <>
+              {/* Mobile View */}
+              <div className="block md:hidden">
+                {filteredUsuarios.map((usuario) => (
+                  <div key={usuario.id} className="border-b border-border p-4 space-y-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center space-x-3">
+                        <Avatar className="w-10 h-10">
+                          <AvatarFallback className="text-sm">
+                            {usuario.nome.charAt(0).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="font-medium text-foreground">{usuario.nome}</p>
+                          <p className="text-sm text-muted-foreground">
+                            Mat: {usuario.matricula || 'N/A'}
+                          </p>
                         </div>
-                      </TableCell>
-                      <TableCell>{usuario.login}</TableCell>
-                      <TableCell>{getTipoBadge(usuario.tipo)}</TableCell>
-                      <TableCell>{usuario.loja_id}</TableCell>
-                      <TableCell>{getStatusBadge(usuario.status)}</TableCell>
-                      <TableCell>
-                        <Badge variant="outline">
-                          {usuario.permissao || 0}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center space-x-2">
-                          <Button variant="ghost" size="sm">
-                            <Edit className="w-4 h-4" />
-                          </Button>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Button variant="ghost" size="sm" onClick={() => handleEdit(usuario.id)}>
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        {usuario.status !== 'ativo' && (
                           <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
                             <Trash2 className="w-4 h-4" />
                           </Button>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">Função:</span>
+                        <div className="mt-1">{getTipoBadge(usuario.tipo)}</div>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Status:</span>
+                        <div className="mt-1">{getStatusBadge(usuario.status)}</div>
+                      </div>
+                      {usuario.email && (
+                        <div className="col-span-2">
+                          <span className="text-muted-foreground">Email:</span>
+                          <p className="text-foreground truncate">{usuario.email}</p>
                         </div>
-                      </TableCell>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                {filteredUsuarios.length === 0 && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    Nenhum usuário encontrado
+                  </div>
+                )}
+              </div>
+
+              {/* Desktop View */}
+              <div className="hidden md:block overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Nome</TableHead>
+                      <TableHead>Matrícula</TableHead>
+                      <TableHead>Função</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Ações</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              {filteredUsuarios.length === 0 && (
-                <div className="text-center py-8 text-muted-foreground">
-                  Nenhum usuário encontrado
-                </div>
-              )}
-            </div>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredUsuarios.map((usuario) => (
+                      <TableRow key={usuario.id}>
+                        <TableCell>
+                          <div className="flex items-center space-x-3">
+                            <Avatar className="w-8 h-8">
+                              <AvatarFallback className="text-xs">
+                                {usuario.nome.charAt(0).toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="font-medium">{usuario.nome}</p>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <span className="font-mono text-sm">
+                            {usuario.matricula || 'N/A'}
+                          </span>
+                        </TableCell>
+                        <TableCell>{getTipoBadge(usuario.tipo)}</TableCell>
+                        <TableCell>
+                          <span className="text-sm text-muted-foreground">
+                            {usuario.email || 'Não informado'}
+                          </span>
+                        </TableCell>
+                        <TableCell>{getStatusBadge(usuario.status)}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center space-x-2">
+                            <Button variant="ghost" size="sm" onClick={() => handleEdit(usuario.id)}>
+                              <Edit className="w-4 h-4" />
+                            </Button>
+                            {usuario.status !== 'ativo' && (
+                              <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            )}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                {filteredUsuarios.length === 0 && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    Nenhum usuário encontrado
+                  </div>
+                )}
+              </div>
+            </>
           )}
         </CardContent>
       </Card>
