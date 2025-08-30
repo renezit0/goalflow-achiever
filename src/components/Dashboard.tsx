@@ -3,52 +3,27 @@ import { DashboardSidebar } from "./DashboardSidebar";
 import { MobileSidebar } from "./MobileSidebar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Share2, BarChart3, Calendar, Trophy } from "lucide-react";
-
-const mockMetrics = [
-  {
-    title: "Geral",
-    value: "R$ 3.083,07",
-    target: "R$ 10.514,16",
-    missing: "R$ 6.581,09 hoje",
-    category: "geral" as const,
-    status: "pendente" as const
-  },
-  {
-    title: "Rentáveis R+",
-    value: "R$ 311,29", 
-    target: "R$ 525,46",
-    missing: "R$ 214,17 hoje",
-    category: "rentavel" as const,
-    status: "pendente" as const
-  },
-  {
-    title: "Perfumaria R+",
-    value: "R$ 468,35",
-    target: "R$ 481,16", 
-    missing: "R$ 12,81 hoje",
-    category: "perfumaria" as const,
-    status: "pendente" as const
-  },
-  {
-    title: "Conveniência R+",
-    value: "R$ 237,98",
-    target: "R$ 337,75",
-    missing: "R$ 99,77 hoje", 
-    category: "conveniencia" as const,
-    status: "pendente" as const
-  },
-  {
-    title: "GoodLife",
-    value: "R$ 84,58",
-    target: "R$ 280,19",
-    missing: "R$ 195,61 hoje",
-    category: "goodlife" as const,
-    status: "pendente" as const
-  }
-];
+import { Share2, BarChart3, Calendar, Trophy, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useDashboardData } from "@/hooks/useDashboardData";
+import { usePeriodoAtual } from "@/hooks/usePeriodoAtual";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export function Dashboard() {
+  const { user, logout } = useAuth();
+  const { metrics, loading } = useDashboardData(user);
+  const periodo = usePeriodoAtual();
+  const navigate = useNavigate();
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="flex">
@@ -66,14 +41,14 @@ export function Dashboard() {
                 {/* Mobile Menu */}
                 <MobileSidebar />
                 
-                <div>
-                  <h1 className="text-xl font-semibold text-foreground">
-                    Dashboard - Minha Loja
-                  </h1>
-                  <p className="text-sm text-muted-foreground">
-                    Olá, FLAVIO RENE PEREIRA DA SILVA
-                  </p>
-                </div>
+                  <div>
+                    <h1 className="text-xl font-semibold text-foreground">
+                      Dashboard - Loja {user.loja_id}
+                    </h1>
+                    <p className="text-sm text-muted-foreground">
+                      Olá, {user.nome}
+                    </p>
+                  </div>
               </div>
               
               <div className="flex items-center space-x-2">
@@ -84,7 +59,7 @@ export function Dashboard() {
                 
                 <Button variant="outline" size="sm">
                   <Calendar className="w-4 h-4 mr-2" />
-                  <span className="hidden sm:inline">08/2025</span>
+                  <span className="hidden sm:inline">{periodo.label}</span>
                 </Button>
 
                 <Button className="bg-warning hover:bg-warning/90 text-warning-foreground hidden sm:flex">
@@ -95,6 +70,16 @@ export function Dashboard() {
                 <Button className="bg-success hover:bg-success/90 text-success-foreground hidden lg:flex">
                   <Trophy className="w-4 h-4 mr-2" />
                   Entenda suas premiações!
+                </Button>
+
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={handleLogout}
+                  className="text-destructive hover:text-destructive"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sair
                 </Button>
               </div>
             </div>
@@ -117,17 +102,23 @@ export function Dashboard() {
 
             {/* Metrics Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
-              {mockMetrics.map((metric, index) => (
-                <MetricCard
-                  key={index}
-                  title={metric.title}
-                  value={metric.value}
-                  target={metric.target}
-                  missing={metric.missing}
-                  category={metric.category}
-                  status={metric.status}
-                />
-              ))}
+              {loading ? (
+                <div className="col-span-full text-center py-8 text-muted-foreground">
+                  Carregando dados...
+                </div>
+              ) : (
+                metrics.map((metric, index) => (
+                  <MetricCard
+                    key={index}
+                    title={metric.title}
+                    value={metric.value}
+                    target={metric.target}
+                    missing={metric.missing}
+                    category={metric.category}
+                    status={metric.status}
+                  />
+                ))
+              )}
             </div>
 
             {/* Summary */}

@@ -11,27 +11,24 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 interface SidebarItem {
   icon: React.ElementType;
   label: string;
+  href: string;
   active?: boolean;
-  onClick?: () => void;
 }
 
 const sidebarItems: SidebarItem[] = [
-  { icon: Home, label: "Dashboard", active: true },
-  { icon: TrendingUp, label: "Vendas Sua Loja" },
-  { icon: Users, label: "SelfCheckout" },
-  { icon: Target, label: "Ocorrências" },
-  { icon: BarChart3, label: "Consulta Preço Site" },
-  { icon: Calendar, label: "Aniversários" },
-  { icon: FileText, label: "Tutoriais/Recados (test)" },
-  { icon: DollarSign, label: "Vendas Colaboradores" },
-  { icon: Settings, label: "Lançar Vendas" },
-  { icon: Settings, label: "Gerenciamento" },
-  { icon: Settings, label: "Orçamentos" },
-  { icon: Settings, label: "Proj. de Metas (test)" }
+  { icon: Home, label: "Dashboard", href: "/" },
+  { icon: TrendingUp, label: "Vendas", href: "/vendas" },
+  { icon: Target, label: "Metas", href: "/metas" },
+  { icon: BarChart3, label: "Campanhas", href: "/campanhas" },
+  { icon: FileText, label: "Relatórios", href: "/relatorios" },
+  { icon: Users, label: "Usuários", href: "/usuarios" },
+  { icon: Settings, label: "Configurações", href: "/configuracoes" }
 ];
 
 interface DashboardSidebarProps {
@@ -39,6 +36,9 @@ interface DashboardSidebarProps {
 }
 
 export function DashboardSidebar({ className }: DashboardSidebarProps) {
+  const location = useLocation();
+  const { user } = useAuth();
+
   return (
     <div className={cn(
       "flex flex-col bg-sidebar text-sidebar-foreground",
@@ -48,12 +48,14 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
       <div className="p-6 border-b border-sidebar-border">
         <div className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-sidebar-primary rounded-full flex items-center justify-center">
-            <span className="text-sidebar-primary-foreground font-bold text-sm">F</span>
+            <span className="text-sidebar-primary-foreground font-bold text-sm">
+              {user?.nome?.charAt(0) || 'U'}
+            </span>
           </div>
           <div>
-            <h1 className="font-semibold text-sm">Dashboard - Minha Loja</h1>
+            <h1 className="font-semibold text-sm">Dashboard - Loja {user?.loja_id}</h1>
             <p className="text-xs text-sidebar-foreground/70">
-              Olá, FLAVIO RENE PEREIRA DA SILVA
+              Olá, {user?.nome}
             </p>
           </div>
         </div>
@@ -61,39 +63,48 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
 
       {/* User Info */}
       <div className="px-6 py-4 border-b border-sidebar-border">
-        <p className="text-xs text-sidebar-foreground/70">Gerente Loja</p>
-        <p className="text-xs text-sidebar-foreground/70">22 - BITTENCOURT</p>
+        <p className="text-xs text-sidebar-foreground/70 capitalize">{user?.tipo}</p>
+        <p className="text-xs text-sidebar-foreground/70">Loja {user?.loja_id}</p>
       </div>
 
       {/* Navigation */}
       <nav className="flex-1 p-4">
         <div className="space-y-1">
-          {sidebarItems.map((item, index) => (
-            <Button
-              key={index}
-              variant={item.active ? "secondary" : "ghost"}
-              className={cn(
-                "w-full justify-start text-left px-3 py-2 h-auto",
-                item.active 
-                  ? "bg-sidebar-accent text-sidebar-accent-foreground" 
-                  : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-              )}
-              onClick={item.onClick}
-            >
-              <item.icon className="w-4 h-4 mr-3 flex-shrink-0" />
-              <span className="text-sm">{item.label}</span>
-            </Button>
-          ))}
+          {sidebarItems.map((item, index) => {
+            const isActive = location.pathname === item.href;
+            return (
+              <Button
+                key={index}
+                variant={isActive ? "secondary" : "ghost"}
+                className={cn(
+                  "w-full justify-start text-left px-3 py-2 h-auto",
+                  isActive 
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground" 
+                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                )}
+                asChild
+              >
+                <Link to={item.href}>
+                  <item.icon className="w-4 h-4 mr-3 flex-shrink-0" />
+                  <span className="text-sm">{item.label}</span>
+                </Link>
+              </Button>
+            );
+          })}
         </div>
       </nav>
 
       {/* Footer */}
       <div className="p-4 border-t border-sidebar-border">
         <div className="flex items-center space-x-2">
-          <div className="w-6 h-6 bg-sidebar-accent rounded-full"></div>
+          <div className="w-6 h-6 bg-sidebar-accent rounded-full flex items-center justify-center">
+            <span className="text-xs text-sidebar-accent-foreground">
+              {user?.nome?.charAt(0) || 'U'}
+            </span>
+          </div>
           <div className="text-xs text-sidebar-foreground/70">
-            <p>FLAVIO RE...</p>
-            <p>Gerente Loja</p>
+            <p className="truncate max-w-24">{user?.nome}</p>
+            <p className="capitalize">{user?.tipo}</p>
           </div>
         </div>
       </div>
