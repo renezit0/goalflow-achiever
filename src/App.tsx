@@ -75,12 +75,12 @@ function AppContent() {
           }`}>
             {user && (
               <header className="header sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-background px-4 lg:px-6">
-                <button 
-                  className="menu-toggle lg:hidden"
-                  onClick={() => setSidebarExpanded(!sidebarExpanded)}
-                >
-                  <i className="fas fa-bars"></i>
-                </button>
+              <button 
+                className="menu-toggle lg:hidden p-2 rounded-md hover:bg-muted transition-colors"
+                onClick={() => setSidebarExpanded(!sidebarExpanded)}
+              >
+                <i className="fas fa-bars text-foreground"></i>
+              </button>
                 <div className="flex-1">
                   <h1 className="page-title text-lg font-semibold md:text-xl">Dashboard</h1>
                 </div>
