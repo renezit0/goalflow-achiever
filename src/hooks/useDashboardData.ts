@@ -23,19 +23,27 @@ export function useDashboardData(user: User | null) {
     const fetchDashboardData = async () => {
       try {
         // Buscar período atual
-        const { data: periodoAtual } = await supabase
+        const { data: periodos, error: periodosError } = await supabase
           .from('periodos_meta')
           .select('*')
           .lte('data_inicio', periodo.dataFim.toISOString().split('T')[0])
           .gte('data_fim', periodo.dataInicio.toISOString().split('T')[0])
           .eq('status', 'ativo')
-          .single();
+          .limit(1);
 
-        if (!periodoAtual) {
+        if (periodosError) {
+          console.error('Erro ao buscar períodos:', periodosError);
+          setLoading(false);
+          return;
+        }
+
+        if (!periodos || periodos.length === 0) {
           console.log('Período atual não encontrado');
           setLoading(false);
           return;
         }
+
+        const periodoAtual = periodos[0];
 
         // Buscar metas da loja atual
         const { data: metasLoja } = await supabase
