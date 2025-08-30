@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { Navigate } from "react-router-dom";
+import { getNomeCategoria, getIconeCategoria, getClasseCorCategoria } from "@/utils/categories";
 
 interface MetaCategoria {
   categoria: string;
@@ -79,13 +80,13 @@ export default function MetasLojaPage() {
         .gte('data_venda', periodoAtual.data_inicio)
         .lte('data_venda', periodoAtual.data_fim);
 
-      // Categorias de metas
+      // Categorias de metas usando sistema padronizado
       const categorias = [
-        { id: 'geral', name: 'Meta Geral', icon: 'fas fa-chart-line', color: 'bg-info' },
-        { id: 'r_mais', name: 'Rentáveis', icon: 'fas fa-chart-bar', color: 'bg-category-rentavel' },
-        { id: 'perfumaria_r_mais', name: 'Perfumaria R+', icon: 'fas fa-spa', color: 'bg-category-perfumaria' },
-        { id: 'conveniencia_r_mais', name: 'Conveniência R+', icon: 'fas fa-shopping-basket', color: 'bg-category-conveniencia' },
-        { id: 'saude', name: 'GoodLife', icon: 'fas fa-heart', color: 'bg-category-goodlife' }
+        { id: 'geral', name: getNomeCategoria('geral') },
+        { id: 'r_mais', name: getNomeCategoria('r_mais') },
+        { id: 'perfumaria_r_mais', name: getNomeCategoria('perfumaria_r_mais') },
+        { id: 'conveniencia_r_mais', name: getNomeCategoria('conveniencia_r_mais') },
+        { id: 'saude', name: getNomeCategoria('saude') }
       ];
 
       const processedMetas: MetaCategoria[] = [];
@@ -129,8 +130,8 @@ export default function MetasLojaPage() {
           restante,
           metaDiaria,
           mediaRealizada,
-          icon: categoria.icon,
-          color: categoria.color
+          icon: getIconeCategoria(categoria.id),
+          color: getClasseCorCategoria(categoria.id)
         });
       }
 
@@ -240,7 +241,7 @@ export default function MetasLojaPage() {
                     <CardTitle className="flex items-center justify-between text-base">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-                          <i className={`${meta.icon} text-sm text-primary`}></i>
+                          <i className={`${meta.icon} text-sm ${meta.color}`}></i>
                         </div>
                         <span className="font-semibold">{meta.nome}</span>
                       </div>

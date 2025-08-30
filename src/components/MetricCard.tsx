@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { StatusBadge } from "./StatusBadge";
 import { cn } from "@/lib/utils";
+import { getNomeCategoria, getIconeCategoria, getClasseCorCategoria } from "@/utils/categories";
 
 interface MetricCardProps {
   title: string;
@@ -21,22 +22,6 @@ const categoryStyles = {
   goodlife: "border-l-category-goodlife"
 };
 
-const categoryIcons = {
-  geral: "fas fa-chart-bar",
-  rentavel: "fas fa-money-bill-wave", 
-  perfumaria: "fas fa-spray-can",
-  conveniencia: "fas fa-shopping-basket",
-  goodlife: "fas fa-heart"
-};
-
-const categoryIconColors = {
-  geral: "text-blue-600",
-  rentavel: "text-green-600", 
-  perfumaria: "text-pink-600",
-  conveniencia: "text-orange-600",
-  goodlife: "text-purple-600"
-};
-
 export function MetricCard({ 
   title, 
   value, 
@@ -47,8 +32,18 @@ export function MetricCard({
   className,
   icon
 }: MetricCardProps) {
-  const cardIcon = icon || categoryIcons[category];
-  const iconColor = categoryIconColors[category];
+  // Mapear categorias locais para categorias padrão
+  const categoryMap: Record<string, string> = {
+    'geral': 'geral',
+    'rentavel': 'r_mais',
+    'perfumaria': 'perfumaria_r_mais',
+    'conveniencia': 'conveniencia_r_mais',
+    'goodlife': 'goodlife'
+  };
+  
+  const mappedCategory = categoryMap[category] || category;
+  const cardIcon = icon || getIconeCategoria(mappedCategory);
+  const iconColor = getClasseCorCategoria(mappedCategory);
   
   return (
     <Card className={cn(
