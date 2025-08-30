@@ -666,4 +666,52 @@
       display: none;
     }
   }
+
+  /* Login page specific styles */
+  .login-container .ring .ring-element {
+    border-color: var(--clr);
+    filter: hue-rotate(calc(var(--i, 0) * 70deg));
+    animation: rotate 4s linear infinite;
+  }
+
+  .login-container .ring .ring-element:nth-child(1) { --i: 0; }
+  .login-container .ring .ring-element:nth-child(2) { --i: 1; }
+  .login-container .ring .ring-element:nth-child(3) { --i: 2; }
+
+  @keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .page-exit {
+    animation: pageExit 1s ease-forward;
+  }
+
+  @keyframes pageExit {
+    to {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+  }
+
+  .dot-animation::after {
+    content: '';
+    animation: dots 1.5s steps(4, end) infinite;
+  }
+
+  @keyframes dots {
+    0%, 20% { content: ''; }
+    40% { content: '.'; }
+    60% { content: '..'; }
+    80%, 100% { content: '...'; }
+  }
 }

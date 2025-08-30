@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { DashboardSidebar } from "./components/DashboardSidebar";
 import { useState, useEffect } from "react";
 import { useAuth } from "./hooks/useAuth";
@@ -24,9 +24,13 @@ const queryClient = new QueryClient();
 function AppContent() {
   const { user } = useAuth();
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const location = useLocation();
   
   // Apply user theme
   useUserTheme();
+
+  // Verificar se estamos na página de login
+  const isLoginPage = location.pathname === '/login';
 
   // Handle sidebar responsive behavior
   useEffect(() => {
@@ -53,67 +57,77 @@ function AppContent() {
     return () => document.removeEventListener('click', handleClickOutside);
   }, [sidebarExpanded]);
 
+  // Se estiver na página de login, renderizar apenas o conteúdo da página
+  if (isLoginPage) {
+    return (
+      <div className="min-h-screen w-full">
+        <Routes>
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </div>
+    );
+  }
+
   return (
-    <BrowserRouter>
-      <PeriodProvider>
-        <div className="flex min-h-screen w-full bg-background">
-          {user && (
-            <>
-              <DashboardSidebar className={`${sidebarExpanded ? 'expanded' : ''}`} />
-            {/* Mobile overlay */}
-            <div 
-              className={`lg:hidden fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 ${
-                sidebarExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'
-              }`} 
-              onClick={() => setSidebarExpanded(false)} 
-            />
-            </>
-          )}
-          
-          <main className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ${
-            user ? 'lg:ml-[70px]' : ''
-          }`}>
-            {user && (
-              <header className="header sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-background px-4 lg:px-6">
-              <button 
-                className="menu-toggle lg:hidden p-2 rounded-md hover:bg-muted transition-colors"
-                onClick={() => setSidebarExpanded(!sidebarExpanded)}
-              >
-                <i className="fas fa-bars text-foreground"></i>
-              </button>
-                <div className="flex-1">
-                  <h1 className="page-title text-lg font-semibold md:text-xl">Dashboard</h1>
-                </div>
-              </header>
-            )}
-            
-            <div className="content-area flex-1 overflow-auto">
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/vendas" element={<Vendas />} />
-                <Route path="/metas" element={<Metas />} />
-                <Route path="/metas-loja" element={<MetasLojaPage />} />
-                <Route path="/campanhas" element={<Campanhas />} />
-                <Route path="/relatorios" element={<Relatorios />} />
-                <Route path="/usuarios" element={<Usuarios />} />
-                <Route path="/configuracoes" element={<Configuracoes />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+    <div className="flex min-h-screen w-full bg-background">
+      {user && (
+        <>
+          <DashboardSidebar className={`${sidebarExpanded ? 'expanded' : ''}`} />
+          {/* Mobile overlay */}
+          <div 
+            className={`lg:hidden fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 ${
+              sidebarExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`} 
+            onClick={() => setSidebarExpanded(false)} 
+          />
+        </>
+      )}
+      
+      <main className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ${
+        user ? 'lg:ml-[70px]' : ''
+      }`}>
+        {user && (
+          <header className="header sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-background px-4 lg:px-6">
+          <button 
+            className="menu-toggle lg:hidden p-2 rounded-md hover:bg-muted transition-colors"
+            onClick={() => setSidebarExpanded(!sidebarExpanded)}
+          >
+            <i className="fas fa-bars text-foreground"></i>
+          </button>
+            <div className="flex-1">
+              <h1 className="page-title text-lg font-semibold md:text-xl">Dashboard</h1>
             </div>
-          </main>
+          </header>
+        )}
+        
+        <div className="content-area flex-1 overflow-auto">
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/vendas" element={<Vendas />} />
+            <Route path="/metas" element={<Metas />} />
+            <Route path="/metas-loja" element={<MetasLojaPage />} />
+            <Route path="/campanhas" element={<Campanhas />} />
+            <Route path="/relatorios" element={<Relatorios />} />
+            <Route path="/usuarios" element={<Usuarios />} />
+            <Route path="/configuracoes" element={<Configuracoes />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </div>
-      </PeriodProvider>
-    </BrowserRouter>
+      </main>
+    </div>
   );
 }
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <AppContent />
+      <BrowserRouter>
+        <PeriodProvider>
+          <Toaster />
+          <Sonner />
+          <AppContent />
+        </PeriodProvider>
+      </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );
