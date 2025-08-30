@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { DashboardSidebar } from "./DashboardSidebar";
@@ -13,9 +12,9 @@ export function MobileSidebar() {
         <Button 
           variant="outline" 
           size="sm"
-          className="lg:hidden"
+          className="lg:hidden btn-modern"
         >
-          <Menu className="h-4 w-4" />
+          <i className="fas fa-bars text-base"></i>
         </Button>
       </SheetTrigger>
       
@@ -23,7 +22,7 @@ export function MobileSidebar() {
         side="left" 
         className="p-0 w-64"
       >
-        <DashboardSidebar />
+        <DashboardSidebar className="w-full h-full static" />
       </SheetContent>
     </Sheet>
   );

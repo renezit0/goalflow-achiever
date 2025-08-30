@@ -9,15 +9,18 @@ interface StatusBadgeProps {
 const statusConfig = {
   pendente: {
     label: "PENDENTE",
-    className: "bg-status-pendente text-warning-foreground hover:bg-status-pendente/80"
+    icon: "fas fa-clock",
+    className: "badge-modern badge-warning"
   },
   atingido: {
     label: "ATINGIDO", 
-    className: "bg-status-atingido text-success-foreground hover:bg-status-atingido/80"
+    icon: "fas fa-check-circle",
+    className: "badge-modern badge-success"
   },
   acima: {
     label: "ACIMA DA META",
-    className: "bg-status-acima text-info-foreground hover:bg-status-acima/80"
+    icon: "fas fa-trophy",
+    className: "badge-modern badge-info"
   }
 };
 
@@ -25,7 +28,8 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
   const config = statusConfig[status];
   
   return (
-    <Badge className={cn(config.className, className)}>
+    <Badge className={cn(config.className, "gap-1.5", className)}>
+      <i className={`${config.icon} text-xs`}></i>
       {config.label}
     </Badge>
   );

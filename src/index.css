@@ -1,30 +1,34 @@
+@import url('@fortawesome/fontawesome-free/css/all.min.css');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
+/* Modern Design System - Based on provided CSS */
 @layer base {
   :root {
-    --background: 250 25% 97%;
-    --foreground: 220 15% 15%;
+    /* Core Colors */
+    --background: 248 250 252; /* slate-50 */
+    --foreground: 30 41 59; /* slate-700 */
 
     --card: 0 0% 100%;
-    --card-foreground: 220 15% 15%;
+    --card-foreground: 30 41 59;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 15%;
+    --popover-foreground: 30 41 59;
 
-    --primary: 224 76% 48%;
+    --primary: 224 76% 48%; /* Blue primary */
     --primary-foreground: 0 0% 100%;
+    --primary-light: 219 86% 65%;
+    --primary-dark: 218 76% 38%;
 
-    --secondary: 220 13% 91%;
-    --secondary-foreground: 220 15% 15%;
+    --secondary: 142 76% 36%; /* Green secondary */
+    --secondary-foreground: 0 0% 100%;
+    --secondary-light: 134 61% 41%;
+    --secondary-dark: 134 61% 31%;
 
     --muted: 220 13% 91%;
-    --muted-foreground: 220 8% 46%;
+    --muted-foreground: 107 114 126;
 
     --accent: 224 76% 48%;
     --accent-foreground: 0 0% 100%;
@@ -38,15 +42,17 @@ All colors MUST be HSL.
 
     --radius: 0.75rem;
 
-    /* Dashboard Color System */
-    --danger: 0 84% 60%;
-    --danger-foreground: 0 0% 100%;
-    --warning: 43 96% 56%;
-    --warning-foreground: 45 100% 15%;
-    --success: 142 76% 36%;
-    --success-foreground: 0 0% 100%;
-    --info: 224 76% 48%;
-    --info-foreground: 0 0% 100%;
+    /* Extended Color System */
+    --surface: 0 0% 100%; /* White */
+    --bg: 248 250 252; /* slate-50 */
+    --bg-dark: 30 41 59; /* slate-700 */
+    --bg-card-hover: 241 245 249; /* slate-100 */
+    
+    /* Status Colors */
+    --error: 220 38% 60%; /* Red */
+    --success: 142 76% 36%; /* Green */
+    --warning: 43 96% 56%; /* Yellow/Orange */
+    --info: 224 76% 48%; /* Blue */
     
     /* Category Colors */
     --category-geral: 0 84% 60%;
@@ -60,15 +66,34 @@ All colors MUST be HSL.
     --status-atingido: 142 76% 36%;
     --status-acima: 224 76% 48%;
 
-    /* Sidebar */
-    --sidebar-background: 220 18% 14%;
-    --sidebar-foreground: 210 20% 98%;
+    /* Gray Scale */
+    --gray-50: 249 250 251;
+    --gray-100: 243 244 246;
+    --gray-200: 229 231 235;
+    --gray-300: 209 213 219;
+    --gray-400: 156 163 175;
+    --gray-500: 107 114 126;
+    --gray-600: 75 85 99;
+    --gray-700: 55 65 81;
+    --gray-800: 31 41 55;
+    --gray-900: 17 24 39;
+
+    /* Text Colors */
+    --text-on-primary: 0 0% 100%;
+    --text-on-secondary: 0 0% 100%;
+
+    /* Sidebar Colors */
+    --sidebar-background: 224 76% 48%; /* Primary color for sidebar */
+    --sidebar-foreground: 0 0% 100%;
     --sidebar-primary: 224 76% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 15% 18%;
-    --sidebar-accent-foreground: 210 20% 98%;
-    --sidebar-border: 220 15% 22%;
+    --sidebar-accent: 0 0% 100% / 0.1;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 100% / 0.1;
     --sidebar-ring: 224 76% 48%;
+
+    /* Animation Variables */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .dark {
@@ -115,9 +140,255 @@ All colors MUST be HSL.
 @layer base {
   * {
     @apply border-border;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
   }
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow-x: hidden;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--gray-100));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--gray-400));
+    border-radius: 100px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary));
+  }
+}
+
+@layer components {
+  /* Card Components */
+  .card-modern {
+    @apply bg-card rounded-xl shadow-sm border border-border overflow-hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
+
+  .card-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .card-header-modern {
+    @apply p-6 border-b border-border bg-muted/30;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-body-modern {
+    @apply p-6;
+  }
+
+  /* Button Components */
+  .btn-modern {
+    @apply inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 relative overflow-hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-modern::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(120deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 70%);
+    transform: translateX(-100%);
+  }
+
+  .btn-modern:hover::after {
+    transform: translateX(100%);
+    transition: transform 0.7s ease;
+  }
+
+  .btn-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+
+  .btn-modern:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-primary-modern {
+    @apply btn-modern bg-primary text-primary-foreground;
+  }
+
+  .btn-primary-modern:hover {
+    background-color: hsl(var(--primary-dark));
+  }
+
+  .btn-secondary-modern {
+    @apply btn-modern bg-secondary text-secondary-foreground;
+  }
+
+  .btn-secondary-modern:hover {
+    background-color: hsl(var(--secondary-dark));
+  }
+
+  .btn-outline-modern {
+    @apply btn-modern bg-transparent border border-border text-foreground;
+  }
+
+  .btn-outline-modern:hover {
+    @apply bg-muted;
+  }
+
+  /* Progress Bar */
+  .progress-modern {
+    @apply w-full h-2 bg-muted rounded-full overflow-hidden;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  .progress-fill {
+    @apply h-full transition-all duration-700 relative overflow-hidden;
+  }
+
+  .progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  .progress-success { background-color: hsl(var(--success)); }
+  .progress-warning { background-color: hsl(var(--warning)); }
+  .progress-error { background-color: hsl(var(--error)); }
+  .progress-info { background-color: hsl(var(--info)); }
+
+  /* Status Badges */
+  .badge-modern {
+    @apply inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium;
+  }
+
+  .badge-success {
+    background-color: hsl(var(--success) / 0.1);
+    color: hsl(var(--success));
+    border: 1px solid hsl(var(--success) / 0.2);
+  }
+
+  .badge-warning {
+    background-color: hsl(var(--warning) / 0.1);
+    color: hsl(var(--warning));
+    border: 1px solid hsl(var(--warning) / 0.2);
+  }
+
+  .badge-error {
+    background-color: hsl(var(--error) / 0.1);
+    color: hsl(var(--error));
+    border: 1px solid hsl(var(--error) / 0.2);
+  }
+
+  .badge-info {
+    background-color: hsl(var(--info) / 0.1);
+    color: hsl(var(--info));
+    border: 1px solid hsl(var(--info) / 0.2);
+  }
+
+  /* Animations */
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out forwards;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 0.5s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { 
+      transform: translateY(20px); 
+      opacity: 0; 
+    }
+    to { 
+      transform: translateY(0); 
+      opacity: 1; 
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      transform: translateX(30px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* Utility Classes */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
   }
 }

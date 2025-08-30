@@ -10,6 +10,7 @@ interface MetricCardProps {
   category: 'geral' | 'rentavel' | 'perfumaria' | 'conveniencia' | 'goodlife';
   status?: 'pendente' | 'atingido' | 'acima';
   className?: string;
+  icon?: string;
 }
 
 const categoryStyles = {
@@ -20,6 +21,13 @@ const categoryStyles = {
   goodlife: "border-l-category-goodlife"
 };
 
+const categoryIcons = {
+  geral: "fas fa-chart-bar",
+  rentavel: "fas fa-money-bill-wave", 
+  perfumaria: "fas fa-spray-can",
+  conveniencia: "fas fa-shopping-basket",
+  goodlife: "fas fa-heart"
+};
 
 export function MetricCard({ 
   title, 
@@ -28,33 +36,47 @@ export function MetricCard({
   missing, 
   category, 
   status = 'pendente',
-  className 
+  className,
+  icon
 }: MetricCardProps) {
+  const cardIcon = icon || categoryIcons[category];
+  
   return (
     <Card className={cn(
-      "border-l-4 hover:shadow-md transition-shadow",
+      "card-modern border-l-4 animate-fade-in hover:shadow-lg",
       categoryStyles[category],
       className
     )}>
-      <CardContent className="p-6">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
+      <CardContent className="card-body-modern">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-muted/50 flex items-center justify-center">
+              <i className={`${cardIcon} text-lg text-primary`}></i>
+            </div>
+            <h3 className="text-sm font-semibold text-foreground">{title}</h3>
+          </div>
           <StatusBadge status={status} />
         </div>
         
-        <div className="space-y-1">
-          <p className="text-2xl font-bold text-foreground">{value}</p>
+        <div className="space-y-3">
+          <p className="text-3xl font-bold text-foreground tracking-tight">{value}</p>
           
           {target && (
-            <p className="text-sm text-muted-foreground">
-              Meta diária: {target}
-            </p>
+            <div className="flex items-center gap-2">
+              <i className="fas fa-bullseye text-xs text-muted-foreground"></i>
+              <p className="text-sm text-muted-foreground">
+                Meta diária: {target}
+              </p>
+            </div>
           )}
           
           {missing && (
-            <p className="text-sm text-danger">
-              Falta {missing} hoje
-            </p>
+            <div className="flex items-center gap-2 p-2 bg-error/10 rounded-lg">
+              <i className="fas fa-exclamation-triangle text-xs text-error"></i>
+              <p className="text-sm text-error font-medium">
+                Falta {missing} hoje
+              </p>
+            </div>
           )}
         </div>
       </CardContent>

@@ -1,36 +1,23 @@
-import { 
-  BarChart3,
-  DollarSign,
-  Home,
-  Settings,
-  TrendingUp,
-  Users,
-  Target,
-  FileText,
-  Calendar,
-  Store
-} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
 interface SidebarItem {
-  icon: React.ElementType;
+  icon: string;
   label: string;
   href: string;
-  active?: boolean;
 }
 
 const sidebarItems: SidebarItem[] = [
-  { icon: Home, label: "Dashboard", href: "/" },
-  { icon: TrendingUp, label: "Vendas", href: "/vendas" },
-  { icon: Target, label: "Metas", href: "/metas" },
-  { icon: Store, label: "Metas da Loja", href: "/metas-loja" },
-  { icon: BarChart3, label: "Campanhas", href: "/campanhas" },
-  { icon: FileText, label: "Relatórios", href: "/relatorios" },
-  { icon: Users, label: "Usuários", href: "/usuarios" },
-  { icon: Settings, label: "Configurações", href: "/configuracoes" }
+  { icon: "fas fa-tachometer-alt", label: "Dashboard", href: "/" },
+  { icon: "fas fa-chart-line", label: "Vendas", href: "/vendas" },
+  { icon: "fas fa-bullseye", label: "Metas", href: "/metas" },
+  { icon: "fas fa-store", label: "Metas da Loja", href: "/metas-loja" },
+  { icon: "fas fa-megaphone", label: "Campanhas", href: "/campanhas" },
+  { icon: "fas fa-file-alt", label: "Relatórios", href: "/relatorios" },
+  { icon: "fas fa-users", label: "Usuários", href: "/usuarios" },
+  { icon: "fas fa-cog", label: "Configurações", href: "/configuracoes" }
 ];
 
 interface DashboardSidebarProps {
@@ -43,70 +30,70 @@ export function DashboardSidebar({ className }: DashboardSidebarProps) {
 
   return (
     <div className={cn(
-      "flex flex-col bg-sidebar text-sidebar-foreground",
+      "sidebar fixed z-50 flex flex-col h-full bg-primary text-white shadow-lg transition-all duration-300 ease-in-out",
+      "w-[70px] hover:w-[220px] group",
       className
     )}>
       {/* Header */}
-      <div className="p-6 border-b border-sidebar-border">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-sidebar-primary rounded-full flex items-center justify-center">
-            <span className="text-sidebar-primary-foreground font-bold text-sm">
-              {user?.nome?.charAt(0) || 'U'}
-            </span>
+      <div className="sidebar-header flex items-center justify-center p-3 mb-3">
+        <div className="sidebar-logo flex items-center">
+          <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-white font-semibold">
+            <i className="fas fa-store text-sm"></i>
           </div>
-          <div>
-            <h1 className="font-semibold text-sm">Dashboard - Loja {user?.loja_id}</h1>
-            <p className="text-xs text-sidebar-foreground/70">
-              Olá, {user?.nome}
-            </p>
+          <div className="logo-text ml-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <span className="text-lg font-semibold">Loja {user?.loja_id}</span>
           </div>
         </div>
       </div>
 
-      {/* User Info */}
-      <div className="px-6 py-4 border-b border-sidebar-border">
-        <p className="text-xs text-sidebar-foreground/70 capitalize">{user?.tipo}</p>
-        <p className="text-xs text-sidebar-foreground/70">Loja {user?.loja_id}</p>
+      {/* User Info - Show on hover */}
+      <div className="px-3 pb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        <div className="text-xs text-white/60 text-center">
+          <p className="capitalize">{user?.tipo}</p>
+          <p>Olá, {user?.nome}</p>
+        </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4">
-        <div className="space-y-1">
-          {sidebarItems.map((item, index) => {
-            const isActive = location.pathname === item.href;
-            return (
-              <Button
-                key={index}
-                variant={isActive ? "secondary" : "ghost"}
-                className={cn(
-                  "w-full justify-start text-left px-3 py-2 h-auto",
-                  isActive 
-                    ? "bg-sidebar-accent text-sidebar-accent-foreground" 
-                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                )}
-                asChild
-              >
-                <Link to={item.href}>
-                  <item.icon className="w-4 h-4 mr-3 flex-shrink-0" />
-                  <span className="text-sm">{item.label}</span>
-                </Link>
-              </Button>
-            );
-          })}
-        </div>
+      <nav className="nav-menu flex-1 flex flex-col gap-1 px-2">
+        {sidebarItems.map((item, index) => {
+          const isActive = location.pathname === item.href;
+          
+          return (
+            <Link
+              key={index}
+              to={item.href}
+              className={cn(
+                "nav-item flex items-center p-3 rounded-lg text-white/80 transition-all duration-150 relative",
+                "hover:bg-white/8 hover:text-white",
+                isActive && "active bg-white/10 text-white border-l-3 border-l-secondary pl-[10px]"
+              )}
+            >
+              <div className={cn(
+                "nav-icon min-w-[38px] h-[38px] rounded-lg bg-white/10 flex items-center justify-center transition-all duration-150",
+                (isActive || "group-hover:bg-secondary") && "bg-secondary text-white"
+              )}>
+                <i className={`${item.icon} text-base`}></i>
+              </div>
+              <span className="nav-label ml-3 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 w-[120px] whitespace-nowrap">
+                {item.label}
+              </span>
+            </Link>
+          );
+        })}
       </nav>
 
-      {/* Footer */}
-      <div className="p-4 border-t border-sidebar-border">
-        <div className="flex items-center space-x-2">
-          <div className="w-6 h-6 bg-sidebar-accent rounded-full flex items-center justify-center">
-            <span className="text-xs text-sidebar-accent-foreground">
-              {user?.nome?.charAt(0) || 'U'}
-            </span>
+      {/* User Profile Footer */}
+      <div className="user-profile flex items-center p-3 border-t border-white/10 sticky bottom-0 bg-primary">
+        <div className="user-avatar w-10 h-10 bg-secondary rounded-full flex items-center justify-center text-white font-bold text-sm">
+          {user?.nome?.charAt(0) || "U"}
+        </div>
+        <div className="user-info ml-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 overflow-hidden">
+          <div className="user-name text-white font-semibold text-sm truncate">
+            {user?.nome}
           </div>
-          <div className="text-xs text-sidebar-foreground/70">
-            <p className="truncate max-w-24">{user?.nome}</p>
-            <p className="capitalize">{user?.tipo}</p>
+          <div className="user-role text-white/60 text-xs truncate capitalize">
+            {user?.tipo}
           </div>
         </div>
       </div>
