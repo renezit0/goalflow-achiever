@@ -7,15 +7,15 @@
 /* Modern Design System - Based on provided CSS */
 @layer base {
   :root {
-    /* Core Colors */
-    --background: 248 250 252; /* slate-50 */
-    --foreground: 30 41 59; /* slate-700 */
+    /* Core Colors - All in HSL format */
+    --background: 0 0% 100%; /* Pure white background */
+    --foreground: 222 84% 5%; /* Dark text */
 
-    --card: 0 0% 100%;
-    --card-foreground: 30 41 59;
+    --card: 0 0% 100%; /* White cards */
+    --card-foreground: 222 84% 5%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 30 41 59;
+    --popover-foreground: 222 84% 5%;
 
     --primary: 224 76% 48%; /* Blue primary */
     --primary-foreground: 0 0% 100%;
@@ -27,8 +27,8 @@
     --secondary-light: 134 61% 41%;
     --secondary-dark: 134 61% 31%;
 
-    --muted: 220 13% 91%;
-    --muted-foreground: 107 114 126;
+    --muted: 210 40% 96%; /* Very light gray */
+    --muted-foreground: 215 16% 47%; /* Medium gray - FIXED FROM RGB */
 
     --accent: 224 76% 48%;
     --accent-foreground: 0 0% 100%;
@@ -36,20 +36,20 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
+    --border: 214 32% 91%; /* Light border */
+    --input: 214 32% 91%;
     --ring: 224 76% 48%;
 
     --radius: 0.75rem;
 
     /* Extended Color System */
     --surface: 0 0% 100%; /* White */
-    --bg: 248 250 252; /* slate-50 */
-    --bg-dark: 30 41 59; /* slate-700 */
-    --bg-card-hover: 241 245 249; /* slate-100 */
+    --bg: 0 0% 100%; /* White background - FIXED */
+    --bg-dark: 222 84% 5%; /* Dark */
+    --bg-card-hover: 210 40% 98%; /* Very light hover */
     
     /* Status Colors */
-    --error: 220 38% 60%; /* Red */
+    --error: 0 84% 60%; /* Red */
     --success: 142 76% 36%; /* Green */
     --warning: 43 96% 56%; /* Yellow/Orange */
     --info: 224 76% 48%; /* Blue */
@@ -66,17 +66,17 @@
     --status-atingido: 142 76% 36%;
     --status-acima: 224 76% 48%;
 
-    /* Gray Scale */
-    --gray-50: 249 250 251;
-    --gray-100: 243 244 246;
-    --gray-200: 229 231 235;
-    --gray-300: 209 213 219;
-    --gray-400: 156 163 175;
-    --gray-500: 107 114 126;
-    --gray-600: 75 85 99;
-    --gray-700: 55 65 81;
-    --gray-800: 31 41 55;
-    --gray-900: 17 24 39;
+    /* Gray Scale - All converted to HSL */
+    --gray-50: 210 40% 98%;
+    --gray-100: 210 40% 96%;
+    --gray-200: 214 32% 91%;
+    --gray-300: 213 27% 84%;
+    --gray-400: 215 20% 65%;
+    --gray-500: 215 16% 47%;
+    --gray-600: 215 19% 35%;
+    --gray-700: 215 25% 27%;
+    --gray-800: 217 33% 17%;
+    --gray-900: 222 84% 5%;
 
     /* Text Colors */
     --text-on-primary: 0 0% 100%;
