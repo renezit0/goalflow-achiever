@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { RefreshCw, Calendar, BarChart3, Share2, AlertTriangle, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Navigate, useNavigate } from "react-router-dom";
 
@@ -171,170 +170,238 @@ export default function MetasLojaPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="flex">
-        {/* Desktop Sidebar */}
-        <div className="hidden lg:flex w-64 min-h-screen border-r border-border">
-          <DashboardSidebar />
-        </div>
-
-        {/* Main Content */}
-        <div className="flex-1">
-          {/* Header */}
-          <header className="bg-card border-b border-border p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <MobileSidebar />
-                <div>
-                  <h1 className="text-xl font-semibold text-foreground">
-                    📊 Metas da Loja {user.loja_id}
-                  </h1>
-                  <p className="text-sm text-muted-foreground">
-                    Acompanhe o desempenho das metas por categoria
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex items-center space-x-2">
-                <PeriodSelector />
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={handleLogout}
-                  className="text-destructive hover:text-destructive"
-                >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Sair
-                </Button>
+    <div className="app-container flex min-h-screen w-full bg-background">
+      {/* Sidebar - Desktop */}
+      <DashboardSidebar className="hidden lg:flex" />
+      
+      {/* Main Content */}
+      <div className="content flex-1 lg:ml-[70px] transition-all duration-300">
+        {/* Top Header */}
+        <header className="header sticky top-0 z-40 bg-card border-b border-border shadow-sm animate-slide-up">
+          <div className="flex items-center justify-between px-6 py-4">
+            <div className="header-left flex items-center gap-4">
+              <MobileSidebar />
+              <div>
+                <h1 className="page-title text-xl font-semibold text-foreground flex items-center gap-2">
+                  <i className="fas fa-bullseye text-primary"></i>
+                  Metas da Loja {user.loja_id}
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                  Acompanhe o desempenho das metas por categoria
+                </p>
               </div>
             </div>
-          </header>
-
-          {/* Content */}
-          <main className="p-4 sm:p-6">
-            {loading ? (
-              <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                <p className="text-muted-foreground">Carregando metas...</p>
+            
+            <div className="header-right flex items-center gap-3">
+              <PeriodSelector />
+              
+              <div className="id-badge flex flex-col items-end bg-muted/50 px-3 py-2 rounded-lg">
+                <div className="id-badge-label text-xs text-muted-foreground">
+                  Período
+                </div>
+                <div className="id-badge-value text-sm font-semibold text-foreground">
+                  {new Date().toLocaleDateString('pt-BR')}
+                </div>
+                <div className="id-badge-role text-xs text-muted-foreground">
+                  Status: Ativo
+                </div>
               </div>
-            ) : (
-              <>
-                {/* Status do Período */}
-                <div className="mb-6 flex items-center justify-end">
-                  <div className="text-right">
-                    <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20">
-                      Status: Em Andamento
-                    </Badge>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Tempo: 29.6% decorrido
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date().toLocaleDateString('pt-BR')} 23:40:09
+
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={handleLogout}
+                className="btn-modern text-destructive hover:text-destructive border-destructive/20 hover:border-destructive"
+              >
+                <i className="fas fa-sign-out-alt text-sm mr-2"></i>
+                Sair
+              </Button>
+            </div>
+          </div>
+        </header>
+
+        {/* Content Area */}
+        <main className="content-area p-6 min-h-[calc(100vh-80px)]">
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <i className="fas fa-spinner fa-spin text-xl text-primary"></i>
+                <span className="text-lg font-medium text-foreground">Carregando metas...</span>
+              </div>
+              <p className="text-muted-foreground">Buscando dados das metas por categoria</p>
+            </div>
+          ) : (
+            <>
+              {/* Status do Período */}
+              <div className="mb-8 animate-slide-in-right">
+                <div className="card-modern p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-warning/10 rounded-lg flex items-center justify-center">
+                        <i className="fas fa-chart-line text-lg text-warning"></i>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-foreground">Status do Período</h3>
+                        <p className="text-sm text-muted-foreground">Progresso geral das metas</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <Badge className="badge-modern badge-warning mb-2">
+                        <i className="fas fa-clock text-xs mr-1"></i>
+                        Em Andamento
+                      </Badge>
+                      <div className="space-y-1">
+                        <p className="text-xs text-muted-foreground">
+                          <i className="fas fa-hourglass-half text-xs mr-1"></i>
+                          Tempo: 29.6% decorrido
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          <i className="fas fa-calendar text-xs mr-1"></i>
+                          {new Date().toLocaleDateString('pt-BR')} 23:40:09
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Detalhes por Categoria */}
+              <div className="mb-8 animate-fade-in">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <i className="fas fa-layer-group text-lg text-primary"></i>
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-semibold text-foreground">
+                      Detalhes por Categoria
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      Acompanhe o desempenho de cada categoria individualmente
                     </p>
                   </div>
                 </div>
 
-                {/* Detalhes por Categoria */}
-                <div className="mb-8">
-                  <h2 className="text-lg font-semibold text-foreground mb-4 border-b-2 border-border pb-2">
-                    Detalhes por Categoria
-                  </h2>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {metas.map((meta, index) => (
-                      <Card key={index} className="border-border">
-                        <CardHeader className="pb-3">
-                          <CardTitle className="flex items-center justify-between text-base">
-                            <div className="flex items-center gap-2">
-                              <span className="text-lg">{meta.icon}</span>
-                              <span>{meta.nome}</span>
+                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {metas.map((meta, index) => (
+                    <Card key={index} className="card-modern animate-scale-in hover:shadow-lg">
+                      <CardHeader className="card-header-modern pb-3">
+                        <CardTitle className="flex items-center justify-between text-base">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-muted/50 rounded-lg flex items-center justify-center">
+                              <i className={`${meta.icon} text-sm text-primary`}></i>
                             </div>
+                            <span className="font-semibold">{meta.nome}</span>
+                          </div>
+                          {meta.categoria === 'geral' && (
+                            <Badge className="badge-modern badge-info text-xs">
+                              <i className="fas fa-clock text-xs mr-1"></i>
+                              Hoje
+                            </Badge>
+                          )}
+                        </CardTitle>
+                      </CardHeader>
+                      
+                      <CardContent className="card-body-modern space-y-4">
+                        {meta.meta === 0 ? (
+                          <div className="text-center py-6">
+                            <div className="w-16 h-16 bg-muted/30 rounded-full flex items-center justify-center mx-auto mb-3">
+                              <i className="fas fa-exclamation-triangle text-2xl text-muted-foreground"></i>
+                            </div>
+                            <p className="text-muted-foreground text-sm mb-2">
+                              {meta.categoria === 'geral' 
+                                ? "Dados de Self Checkout não disponíveis para esta data." 
+                                : "Meta não definida para esta categoria."
+                              }
+                            </p>
                             {meta.categoria === 'geral' && (
-                              <Badge variant="outline" className="text-xs">
-                                Hoje
-                              </Badge>
-                            )}
-                          </CardTitle>
-                        </CardHeader>
-                        
-                        <CardContent className="space-y-4">
-                          {meta.meta === 0 ? (
-                            <div className="text-center py-4">
-                              <p className="text-muted-foreground text-sm">
-                                {meta.categoria === 'geral' 
-                                  ? "Dados de Self Checkout não disponíveis para esta data." 
-                                  : "Meta não definida para esta categoria."
-                                }
+                              <p className="text-xs text-muted-foreground">
+                                O módulo Self Checkout está disponível em "Self Checkout" no menu.
                               </p>
-                              {meta.categoria === 'geral' && (
-                                <p className="text-xs text-muted-foreground mt-2">
-                                  O módulo Self Checkout está disponível em "Self Checkout" no menu.
-                                </p>
-                              )}
+                            )}
+                          </div>
+                        ) : (
+                          <>
+                            <div className="space-y-3">
+                              <div className="flex justify-between items-center p-2 bg-muted/20 rounded-lg">
+                                <span className="text-sm text-muted-foreground flex items-center gap-2">
+                                  <i className="fas fa-bullseye text-xs"></i>
+                                  Meta:
+                                </span>
+                                <span className="font-semibold text-foreground">{formatCurrency(meta.meta)}</span>
+                              </div>
+                              <div className="flex justify-between items-center p-2 bg-primary/5 rounded-lg">
+                                <span className="text-sm text-muted-foreground flex items-center gap-2">
+                                  <i className="fas fa-chart-bar text-xs"></i>
+                                  Realizado:
+                                </span>
+                                <span className="font-semibold text-primary">{formatCurrency(meta.realizado)}</span>
+                              </div>
                             </div>
-                          ) : (
-                            <>
-                              <div className="space-y-2">
-                                <div className="flex justify-between text-sm">
-                                  <span className="text-muted-foreground">Meta:</span>
-                                  <span className="font-medium">{formatCurrency(meta.meta)}</span>
-                                </div>
-                                <div className="flex justify-between text-sm">
-                                  <span className="text-muted-foreground">Realizado:</span>
-                                  <span className="font-medium text-primary">{formatCurrency(meta.realizado)}</span>
-                                </div>
-                              </div>
 
-                              <div className="space-y-2">
-                                <div className="flex justify-between text-sm">
-                                  <span className="text-muted-foreground">Progresso:</span>
-                                  <span className="font-medium">{meta.progresso.toFixed(1)}%</span>
-                                </div>
-                                <Progress 
-                                  value={meta.progresso} 
-                                  className="h-2"
-                                />
+                            <div className="space-y-3">
+                              <div className="flex justify-between text-sm">
+                                <span className="text-muted-foreground flex items-center gap-2">
+                                  <i className="fas fa-percentage text-xs"></i>
+                                  Progresso:
+                                </span>
+                                <span className="font-semibold">{meta.progresso.toFixed(1)}%</span>
                               </div>
+                              <div className="progress-modern">
+                                <div 
+                                  className={`progress-fill ${
+                                    meta.progresso >= 100 ? 'progress-success' : 
+                                    meta.progresso >= 70 ? 'progress-info' : 
+                                    meta.progresso >= 40 ? 'progress-warning' : 'progress-error'
+                                  }`}
+                                  style={{ width: `${Math.min(meta.progresso, 100)}%` }}
+                                ></div>
+                              </div>
+                            </div>
 
-                              <div className="space-y-2">
-                                <div className="flex justify-between text-sm">
-                                  <span className="text-muted-foreground">Restante:</span>
-                                  <span className="font-medium">{formatCurrency(meta.restante)}</span>
-                                </div>
-                                <div className="flex justify-between text-sm">
-                                  <span className="text-muted-foreground">Meta Diária:</span>
-                                  <span className="font-medium">{formatCurrency(meta.metaDiaria)}/dia</span>
-                                </div>
-                                <div className="flex justify-between text-sm">
-                                  <span className="text-muted-foreground">Média Realizada:</span>
-                                  <span className="font-medium flex items-center gap-1">
-                                    {formatCurrency(meta.mediaRealizada)}/dia
-                                    {meta.mediaRealizada < meta.metaDiaria && (
-                                      <AlertTriangle className="w-3 h-3 text-warning" />
-                                    )}
+                            <div className="grid grid-cols-2 gap-3 pt-2">
+                              <div className="text-center p-2 bg-muted/10 rounded-lg">
+                                <div className="text-xs text-muted-foreground mb-1">Restante</div>
+                                <div className="font-medium text-sm">{formatCurrency(meta.restante)}</div>
+                              </div>
+                              <div className="text-center p-2 bg-muted/10 rounded-lg">
+                                <div className="text-xs text-muted-foreground mb-1">Meta Diária</div>
+                                <div className="font-medium text-sm">{formatCurrency(meta.metaDiaria)}</div>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center justify-between p-2 bg-muted/10 rounded-lg">
+                              <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                <i className="fas fa-calculator text-xs"></i>
+                                Média Realizada:
+                              </span>
+                              <span className="font-medium text-sm flex items-center gap-1">
+                                {formatCurrency(meta.mediaRealizada)}/dia
+                                {meta.mediaRealizada < meta.metaDiaria && (
+                                  <i className="fas fa-exclamation-triangle text-xs text-warning"></i>
+                                )}
+                              </span>
+                            </div>
+
+                            {meta.realizado < meta.meta && (
+                              <div className="bg-warning/10 border border-warning/20 rounded-lg p-3">
+                                <div className="flex items-center gap-2 text-warning text-sm">
+                                  <i className="fas fa-exclamation-triangle text-sm"></i>
+                                  <span className="font-medium">
+                                    Faltam {formatCurrency(meta.restante)} para a meta diária
                                   </span>
                                 </div>
                               </div>
-
-                              {meta.realizado < meta.meta && (
-                                <div className="bg-warning/10 border border-warning/20 rounded-lg p-3">
-                                  <div className="flex items-center gap-2 text-warning text-sm">
-                                    <AlertTriangle className="w-4 h-4" />
-                                    Faltam {formatCurrency(meta.restante)} para a meta diária
-                                  </div>
-                                </div>
-                              )}
-                            </>
-                          )}
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
+                            )}
+                          </>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
-              </>
-            )}
-          </main>
-        </div>
+              </div>
+            </>
+          )}
+        </main>
       </div>
     </div>
   );
