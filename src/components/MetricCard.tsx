@@ -29,6 +29,14 @@ const categoryIcons = {
   goodlife: "fas fa-heart"
 };
 
+const categoryIconColors = {
+  geral: "text-blue-600",
+  rentavel: "text-green-600", 
+  perfumaria: "text-pink-600",
+  conveniencia: "text-orange-600",
+  goodlife: "text-purple-600"
+};
+
 export function MetricCard({ 
   title, 
   value, 
@@ -40,6 +48,7 @@ export function MetricCard({
   icon
 }: MetricCardProps) {
   const cardIcon = icon || categoryIcons[category];
+  const iconColor = categoryIconColors[category];
   
   return (
     <Card className={cn(
@@ -47,11 +56,11 @@ export function MetricCard({
       categoryStyles[category],
       className
     )}>
-      <CardContent className="card-body-modern">
-        <div className="flex items-center justify-between mb-4">
+      <CardContent className="card-body-modern pt-6">
+        <div className="flex items-center justify-between mb-4 mt-2">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-muted/50 flex items-center justify-center">
-              <i className={`${cardIcon} text-lg text-primary`}></i>
+              <i className={`${cardIcon} text-lg ${iconColor}`}></i>
             </div>
             <h3 className="text-sm font-semibold text-foreground">{title}</h3>
           </div>
