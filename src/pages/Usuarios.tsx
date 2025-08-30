@@ -46,13 +46,27 @@ export default function Usuarios() {
 
   const fetchUserAvatar = async (userId: number): Promise<string | null> => {
     try {
-      const response = await fetch(`https://onev2.seellbr.com/uploads/avatars/user_${userId}_current.txt`);
+      const txtUrl = `https://onev2.seellbr.com/uploads/avatars/user_${userId}_current.txt`;
+      console.log(`Buscando avatar para usuário ${userId} em:`, txtUrl);
+      
+      const response = await fetch(txtUrl, {
+        method: 'GET',
+        mode: 'cors'
+      });
+      
+      console.log(`Response status para usuário ${userId}:`, response.status);
+      
       if (response.ok) {
         const avatarPath = await response.text();
-        return `https://onev2.seellbr.com/${avatarPath.trim()}`;
+        console.log(`Conteúdo do arquivo para usuário ${userId}:`, avatarPath);
+        
+        const fullAvatarUrl = `https://onev2.seellbr.com/${avatarPath.trim()}`;
+        console.log(`URL final do avatar para usuário ${userId}:`, fullAvatarUrl);
+        
+        return fullAvatarUrl;
       }
     } catch (error) {
-      console.log(`Avatar não encontrado para usuário ${userId}`);
+      console.error(`Erro ao buscar avatar para usuário ${userId}:`, error);
     }
     return null;
   };
