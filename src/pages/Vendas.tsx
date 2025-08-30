@@ -28,7 +28,7 @@ interface Venda {
 }
 
 export default function Vendas() {
-  const { user, logout } = useAuth();
+  const { user, logout, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [vendas, setVendas] = useState<Venda[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,6 +36,19 @@ export default function Vendas() {
   const [categoriaFilter, setCategoriaFilter] = useState<string>('all');
   const [periodoFilter, setPeriodoFilter] = useState<string>('hoje');
 
+  // Show loading while authentication is being checked
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Verificando autenticação...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect to login if not authenticated
   if (!user) {
     return <Navigate to="/login" replace />;
   }
