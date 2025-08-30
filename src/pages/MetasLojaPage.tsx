@@ -80,13 +80,17 @@ export default function MetasLojaPage() {
         .eq('loja_id', user.loja_id)
         .eq('periodo_meta_id', periodoAtual.id);
 
-      // Buscar vendas da loja atual no período
+      // Buscar vendas da loja atual no período (dia 21 ao dia 20)
+      const dataAtual = new Date();
+      const dataInicioPeriodo = new Date(dataAtual.getFullYear(), dataAtual.getMonth() - 1, 21); // Dia 21 do mês anterior
+      const dataFimPeriodo = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), 20); // Dia 20 do mês atual
+
       const { data: vendasLoja } = await supabase
         .from('vendas_loja')
         .select('*')
         .eq('loja_id', user.loja_id)
-        .gte('data_venda', periodo.dataInicio.toISOString().split('T')[0])
-        .lte('data_venda', periodo.dataFim.toISOString().split('T')[0]);
+        .gte('data_venda', dataInicioPeriodo.toISOString().split('T')[0])
+        .lte('data_venda', dataFimPeriodo.toISOString().split('T')[0]);
 
       // Categorias de metas
       const categorias = [

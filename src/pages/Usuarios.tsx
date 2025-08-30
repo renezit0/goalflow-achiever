@@ -37,14 +37,14 @@ export default function Usuarios() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [tipoFilter, setTipoFilter] = useState<string>('all');
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
   useEffect(() => {
     fetchUsuarios();
