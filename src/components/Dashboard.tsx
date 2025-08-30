@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { useDashboardData } from "@/hooks/useDashboardData";
-import { PeriodProvider, usePeriodContext } from "@/contexts/PeriodContext";
+import { usePeriodContext } from "@/contexts/PeriodContext";
 import { Navigate } from "react-router-dom";
 
 function DashboardContent() {
@@ -222,9 +222,5 @@ function DashboardContent() {
 }
 
 export function Dashboard() {
-  return (
-    <PeriodProvider>
-      <DashboardContent />
-    </PeriodProvider>
-  );
+  return <DashboardContent />;
 }

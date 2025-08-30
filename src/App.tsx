@@ -7,6 +7,7 @@ import { DashboardSidebar } from "./components/DashboardSidebar";
 import { useState, useEffect } from "react";
 import { useAuth } from "./hooks/useAuth";
 import { useUserTheme } from "./hooks/useUserTheme";
+import { PeriodProvider } from "./contexts/PeriodContext";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Vendas from "./pages/Vendas";
@@ -108,9 +109,11 @@ function AppContent() {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <AppContent />
+      <PeriodProvider>
+        <Toaster />
+        <Sonner />
+        <AppContent />
+      </PeriodProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
