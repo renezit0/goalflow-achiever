@@ -52,6 +52,34 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				danger: {
+					DEFAULT: 'hsl(var(--danger))',
+					foreground: 'hsl(var(--danger-foreground))'
+				},
+				warning: {
+					DEFAULT: 'hsl(var(--warning))',
+					foreground: 'hsl(var(--warning-foreground))'
+				},
+				success: {
+					DEFAULT: 'hsl(var(--success))',
+					foreground: 'hsl(var(--success-foreground))'
+				},
+				info: {
+					DEFAULT: 'hsl(var(--info))',
+					foreground: 'hsl(var(--info-foreground))'
+				},
+				category: {
+					geral: 'hsl(var(--category-geral))',
+					rentavel: 'hsl(var(--category-rentavel))',
+					perfumaria: 'hsl(var(--category-perfumaria))',
+					conveniencia: 'hsl(var(--category-conveniencia))',
+					goodlife: 'hsl(var(--category-goodlife))'
+				},
+				status: {
+					pendente: 'hsl(var(--status-pendente))',
+					atingido: 'hsl(var(--status-atingido))',
+					acima: 'hsl(var(--status-acima))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
