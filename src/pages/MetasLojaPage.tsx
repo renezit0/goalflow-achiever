@@ -2,13 +2,15 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { usePeriodoAtual } from "@/hooks/usePeriodoAtual";
 import { PeriodSelector } from "@/components/PeriodSelector";
+import { DashboardSidebar } from "@/components/DashboardSidebar";
+import { MobileSidebar } from "@/components/MobileSidebar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { RefreshCw, Calendar, BarChart3, Share2, AlertTriangle } from "lucide-react";
+import { RefreshCw, Calendar, BarChart3, Share2, AlertTriangle, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 interface MetaCategoria {
   categoria: string;
@@ -24,7 +26,8 @@ interface MetaCategoria {
 }
 
 export default function MetasLojaPage() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, logout, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const periodo = usePeriodoAtual();
   const [metas, setMetas] = useState<MetaCategoria[]>([]);
   const [loading, setLoading] = useState(true);
@@ -44,6 +47,11 @@ export default function MetasLojaPage() {
   if (!user) {
     return <Navigate to="/login" replace />;
   }
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   useEffect(() => {
     fetchMetas();
