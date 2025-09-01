@@ -37,10 +37,12 @@ interface ChartData {
 export default function Vendas() {
   const { user, loading: authLoading } = useAuth();
   const [vendas, setVendas] = useState<Venda[]>([]);
+  const [vendedores, setVendedores] = useState<{id: number, nome: string}[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoriaFilter, setCategoriaFilter] = useState<string>('geral'); // Começar com 'geral' por padrão
-  const [periodoFilter, setPeriodoFilter] = useState<string>('hoje');
+  const [periodoFilter, setPeriodoFilter] = useState<string>('completo'); // Período completo por padrão
+  const [vendedorFilter, setVendedorFilter] = useState<string>('all');
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [lojaInfo, setLojaInfo] = useState<{ regiao: string } | null>(null);
 
@@ -48,10 +50,26 @@ export default function Vendas() {
   useEffect(() => {
     if (user) {
       fetchLojaInfo();
+      fetchVendedores();
       fetchVendas();
       generateChartData();
     }
-  }, [periodoFilter, user]);
+  }, [periodoFilter, vendedorFilter, user]);
+
+  const fetchVendedores = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('usuarios')
+        .select('id, nome')
+        .eq('loja_id', user.loja_id)
+        .order('nome');
+
+      if (error) throw error;
+      setVendedores(data || []);
+    } catch (error) {
+      console.error('Erro ao buscar vendedores:', error);
+    }
+  };
 
   const fetchLojaInfo = async () => {
     try {
@@ -88,6 +106,12 @@ export default function Vendas() {
       } else if (periodoFilter === 'mes') {
         const inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
         query = query.gte('data_venda', format(inicioMes, 'yyyy-MM-dd'));
+      }
+      // Se for 'completo', não aplica filtro de data
+
+      // Filtro por vendedor
+      if (vendedorFilter !== 'all') {
+        query = query.eq('registrado_por_usuario_id', parseInt(vendedorFilter));
       }
 
       const { data, error } = await query;
@@ -180,12 +204,10 @@ export default function Vendas() {
   });
 
   const totalVendas = filteredVendas.reduce((sum, venda) => sum + venda.valor_venda, 0);
-  const totalQuantidade = filteredVendas.reduce((sum, venda) => sum + venda.quantidade, 0);
 
   // Separar totais por categoria
   const vendasGeral = vendas.filter(v => v.categoria === 'geral');
   const totalGeralVendas = vendasGeral.reduce((sum, venda) => sum + venda.valor_venda, 0);
-  const totalGeralQuantidade = vendasGeral.reduce((sum, venda) => sum + venda.quantidade, 0);
   
   // Calcular participações e indicadores
   const valorTotalTodas = vendas.reduce((sum, venda) => sum + venda.valor_venda, 0);
@@ -194,13 +216,12 @@ export default function Vendas() {
   // Vendas por categoria para indicadores
   const vendasPorCategoria = vendas.reduce((acc, venda) => {
     if (!acc[venda.categoria]) {
-      acc[venda.categoria] = { valor: 0, quantidade: 0, transacoes: 0 };
+      acc[venda.categoria] = { valor: 0, transacoes: 0 };
     }
     acc[venda.categoria].valor += venda.valor_venda;
-    acc[venda.categoria].quantidade += venda.quantidade;
     acc[venda.categoria].transacoes += 1;
     return acc;
-  }, {} as Record<string, { valor: number; quantidade: number; transacoes: number }>);
+  }, {} as Record<string, { valor: number; transacoes: number }>);
 
   // Ticket médio
   const ticketMedio = filteredVendas.length > 0 ? totalVendas / filteredVendas.length : 0;
@@ -221,116 +242,115 @@ export default function Vendas() {
   };
 
   return (
-    <div className="p-6 space-y-6 bg-background min-h-screen">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 bg-background min-h-screen">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground">
             Vendas - Loja {user.loja_id}
           </h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-muted-foreground mt-1 text-sm">
             Acompanhe as vendas e performance da loja
           </p>
         </div>
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
         <Card>
-          <CardContent className="p-4">
+          <CardContent className="p-3 sm:p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Participação Geral</p>
-                <p className="text-2xl font-bold text-foreground">
+                <p className="text-xs sm:text-sm text-muted-foreground">Participação Geral</p>
+                <p className="text-lg sm:text-2xl font-bold text-foreground">
                   {participacaoGeral.toFixed(1)}%
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground hidden sm:block">
                   R$ {totalGeralVendas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 </p>
               </div>
-              <DollarSign className="w-8 h-8 text-success" />
+              <DollarSign className="w-6 h-6 sm:w-8 sm:h-8 text-success" />
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-4">
+          <CardContent className="p-3 sm:p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Ticket Médio</p>
-                <p className="text-2xl font-bold text-foreground">
+                <p className="text-xs sm:text-sm text-muted-foreground">Ticket Médio</p>
+                <p className="text-lg sm:text-2xl font-bold text-foreground">
                   R$ {ticketMedio.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground hidden sm:block">
                   Por transação
                 </p>
               </div>
-              <BarChart3 className="w-8 h-8 text-primary" />
+              <BarChart3 className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-4">
+          <CardContent className="p-3 sm:p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Categorias Ativas</p>
-                <p className="text-2xl font-bold text-foreground">{Object.keys(vendasPorCategoria).length}</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs sm:text-sm text-muted-foreground">Categorias Ativas</p>
+                <p className="text-lg sm:text-2xl font-bold text-foreground">{Object.keys(vendasPorCategoria).length}</p>
+                <p className="text-xs text-muted-foreground hidden sm:block">
                   Com vendas no período
                 </p>
               </div>
-              <TrendingUp className="w-8 h-8 text-primary" />
+              <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-4">
+          <CardContent className="p-3 sm:p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total Transações</p>
-                <p className="text-2xl font-bold text-foreground">{filteredVendas.length}</p>
-                <p className="text-xs text-muted-foreground">
-                  {totalQuantidade} itens vendidos
+                <p className="text-xs sm:text-sm text-muted-foreground">Total Transações</p>
+                <p className="text-lg sm:text-2xl font-bold text-foreground">{filteredVendas.length}</p>
+                <p className="text-xs text-muted-foreground hidden sm:block">
+                  Vendas realizadas
                 </p>
               </div>
-              <Calendar className="w-8 h-8 text-warning" />
+              <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-warning" />
             </div>
           </CardContent>
         </Card>
       </div>
 
       {/* Indicadores por Categoria */}
-      <Card className="mb-6">
+      <Card className="mb-4 sm:mb-6">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="w-5 h-5" />
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
             Indicadores por Categoria
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {Object.entries(vendasPorCategoria)
               .sort(([,a], [,b]) => b.valor - a.valor)
               .slice(0, 6)
               .map(([categoria, dados]) => {
                 const participacao = valorTotalTodas > 0 ? (dados.valor / valorTotalTodas * 100) : 0;
                 return (
-                  <div key={categoria} className="p-4 border rounded-lg bg-card">
+                  <div key={categoria} className="p-3 sm:p-4 border rounded-lg bg-card">
                     <div className="flex items-center justify-between mb-2">
                       <Badge className={getCategoriaColor(categoria)} variant="secondary">
-                        {categoria.replace('_', ' ').toUpperCase()}
+                        <span className="text-xs">{categoria.replace('_', ' ').toUpperCase()}</span>
                       </Badge>
-                      <span className="text-sm font-medium">{participacao.toFixed(1)}%</span>
+                      <span className="text-xs sm:text-sm font-medium">{participacao.toFixed(1)}%</span>
                     </div>
                     <div className="space-y-1">
-                      <p className="text-lg font-bold">
+                      <p className="text-base sm:text-lg font-bold">
                         R$ {dados.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                       </p>
-                      <div className="flex justify-between text-sm text-muted-foreground">
+                      <div className="text-xs sm:text-sm text-muted-foreground">
                         <span>{dados.transacoes} vendas</span>
-                        <span>{dados.quantidade} itens</span>
                       </div>
                     </div>
                   </div>
@@ -341,18 +361,18 @@ export default function Vendas() {
       </Card>
 
       {/* Filters */}
-      <Card className="mb-6">
+      <Card className="mb-4 sm:mb-6">
         <CardHeader>
-          <CardTitle className="text-lg flex items-center justify-between">
-            Filtros
-            <Button size="sm" className="bg-primary hover:bg-primary/90">
+          <CardTitle className="text-base sm:text-lg flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <span>Filtros</span>
+            <Button size="sm" className="bg-primary hover:bg-primary/90 w-full sm:w-auto">
               <Plus className="w-4 h-4 mr-2" />
               Nova Venda
             </Button>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input
@@ -368,10 +388,24 @@ export default function Vendas() {
                 <SelectValue placeholder="Período" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="completo">Período Completo</SelectItem>
                 <SelectItem value="hoje">Hoje</SelectItem>
                 <SelectItem value="semana">Última Semana</SelectItem>
                 <SelectItem value="mes">Este Mês</SelectItem>
-                <SelectItem value="todos">Todos</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={vendedorFilter} onValueChange={setVendedorFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="Vendedor" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os Vendedores</SelectItem>
+                {vendedores.map((vendedor) => (
+                  <SelectItem key={vendedor.id} value={vendedor.id.toString()}>
+                    {vendedor.nome}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
 
@@ -395,7 +429,7 @@ export default function Vendas() {
               </SelectContent>
             </Select>
 
-            <div className="text-sm text-muted-foreground flex items-center">
+            <div className="text-xs sm:text-sm text-muted-foreground flex items-center">
               Total: {filteredVendas.length} vendas
             </div>
           </div>
@@ -405,13 +439,15 @@ export default function Vendas() {
       {/* Charts and Table */}
       <Tabs defaultValue="charts" className="space-y-4">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="charts" className="flex items-center gap-2">
+          <TabsTrigger value="charts" className="flex items-center gap-2 text-sm">
             <LineChart className="w-4 h-4" />
-            Gráficos
+            <span className="hidden sm:inline">Gráficos</span>
+            <span className="sm:hidden">Gráfico</span>
           </TabsTrigger>
-          <TabsTrigger value="table" className="flex items-center gap-2">
+          <TabsTrigger value="table" className="flex items-center gap-2 text-sm">
             <Calendar className="w-4 h-4" />
-            Lista de Vendas
+            <span className="hidden sm:inline">Lista de Vendas</span>
+            <span className="sm:hidden">Lista</span>
           </TabsTrigger>
         </TabsList>
 
@@ -420,18 +456,19 @@ export default function Vendas() {
             {/* Gráfico de Vendas por Dia */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5" />
-                  Vendas por Dia
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="hidden sm:inline">Vendas por Dia</span>
+                  <span className="sm:hidden">Vendas/Dia</span>
                   {lojaInfo?.regiao === 'centro' && (
                     <Badge variant="secondary" className="text-xs">
-                      Domingos fechados
+                      Dom. fechados
                     </Badge>
                   )}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={250}>
                   <RechartsLineChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                     <XAxis 
@@ -461,13 +498,14 @@ export default function Vendas() {
             {/* Gráfico de Transações por Dia */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5" />
-                  Transações por Dia
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="hidden sm:inline">Transações por Dia</span>
+                  <span className="sm:hidden">Transações/Dia</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={250}>
                   <BarChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                     <XAxis 
@@ -494,7 +532,7 @@ export default function Vendas() {
         <TabsContent value="table">
           <Card>
             <CardHeader>
-              <CardTitle>Lista de Vendas</CardTitle>
+              <CardTitle className="text-base sm:text-lg">Lista de Vendas</CardTitle>
             </CardHeader>
             <CardContent>
               {loading ? (
@@ -506,41 +544,47 @@ export default function Vendas() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Data</TableHead>
-                        <TableHead>Categoria</TableHead>
-                        <TableHead>Quantidade</TableHead>
-                        <TableHead>Valor</TableHead>
-                        <TableHead>Registro</TableHead>
+                        <TableHead className="text-xs sm:text-sm">Data</TableHead>
+                        <TableHead className="text-xs sm:text-sm">Categoria</TableHead>
+                        <TableHead className="text-xs sm:text-sm">Valor</TableHead>
+                        <TableHead className="text-xs sm:text-sm hidden sm:table-cell">Vendedor</TableHead>
+                        <TableHead className="text-xs sm:text-sm hidden lg:table-cell">Registro</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredVendas.map((venda) => (
-                        <TableRow key={venda.id}>
-                          <TableCell>
-                            {format(new Date(venda.data_venda), 'dd/MM/yyyy', { locale: ptBR })}
-                          </TableCell>
-                          <TableCell>
-                            <Badge className={getCategoriaColor(venda.categoria)}>
-                              {venda.categoria.replace('_', ' ').toUpperCase()}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>{venda.quantidade}</TableCell>
-                          <TableCell className="font-medium">
-                            R$ {venda.valor_venda.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                          </TableCell>
-                          <TableCell className="text-sm text-muted-foreground">
-                            {venda.data_registro ? 
-                              format(new Date(venda.data_registro), 'dd/MM/yyyy HH:mm', { locale: ptBR }) :
-                              'Não informado'
-                            }
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                      {filteredVendas.map((venda) => {
+                        const vendedor = vendedores.find(v => v.id === venda.registrado_por_usuario_id);
+                        return (
+                          <TableRow key={venda.id}>
+                            <TableCell className="text-xs sm:text-sm">
+                              {format(new Date(venda.data_venda), 'dd/MM/yyyy', { locale: ptBR })}
+                            </TableCell>
+                            <TableCell>
+                              <Badge className={`${getCategoriaColor(venda.categoria)} text-xs`}>
+                                <span className="hidden sm:inline">{venda.categoria.replace('_', ' ').toUpperCase()}</span>
+                                <span className="sm:hidden">{venda.categoria.substring(0, 6).toUpperCase()}</span>
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="font-medium text-xs sm:text-sm">
+                              R$ {venda.valor_venda.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                            </TableCell>
+                            <TableCell className="text-xs sm:text-sm text-muted-foreground hidden sm:table-cell">
+                              {vendedor?.nome || 'N/A'}
+                            </TableCell>
+                            <TableCell className="text-xs text-muted-foreground hidden lg:table-cell">
+                              {venda.data_registro ? 
+                                format(new Date(venda.data_registro), 'dd/MM/yyyy HH:mm', { locale: ptBR }) :
+                                'Não informado'
+                              }
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
                     </TableBody>
                   </Table>
                   {filteredVendas.length === 0 && (
-                    <div className="text-center py-8 text-muted-foreground">
-                      Nenhuma venda encontrada para o período selecionado
+                    <div className="text-center py-8 text-muted-foreground text-sm">
+                      Nenhuma venda encontrada para os filtros selecionados
                     </div>
                   )}
                 </div>
