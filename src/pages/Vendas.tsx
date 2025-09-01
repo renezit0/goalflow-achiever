@@ -179,10 +179,31 @@ export default function Vendas() {
     return matchesSearch && matchesCategoria;
   });
 
+  const totalVendas = filteredVendas.reduce((sum, venda) => sum + venda.valor_venda, 0);
+  const totalQuantidade = filteredVendas.reduce((sum, venda) => sum + venda.quantidade, 0);
+
   // Separar totais por categoria
   const vendasGeral = vendas.filter(v => v.categoria === 'geral');
   const totalGeralVendas = vendasGeral.reduce((sum, venda) => sum + venda.valor_venda, 0);
   const totalGeralQuantidade = vendasGeral.reduce((sum, venda) => sum + venda.quantidade, 0);
+  
+  // Calcular participações e indicadores
+  const valorTotalTodas = vendas.reduce((sum, venda) => sum + venda.valor_venda, 0);
+  const participacaoGeral = valorTotalTodas > 0 ? (totalGeralVendas / valorTotalTodas * 100) : 0;
+  
+  // Vendas por categoria para indicadores
+  const vendasPorCategoria = vendas.reduce((acc, venda) => {
+    if (!acc[venda.categoria]) {
+      acc[venda.categoria] = { valor: 0, quantidade: 0, transacoes: 0 };
+    }
+    acc[venda.categoria].valor += venda.valor_venda;
+    acc[venda.categoria].quantidade += venda.quantidade;
+    acc[venda.categoria].transacoes += 1;
+    return acc;
+  }, {} as Record<string, { valor: number; quantidade: number; transacoes: number }>);
+
+  // Ticket médio
+  const ticketMedio = filteredVendas.length > 0 ? totalVendas / filteredVendas.length : 0;
 
   const getCategoriaColor = (categoria: string) => {
     const colors: Record<string, string> = {
@@ -198,9 +219,6 @@ export default function Vendas() {
     
     return colors[categoria] || 'bg-gray-500 text-white';
   };
-
-  const totalVendas = filteredVendas.reduce((sum, venda) => sum + venda.valor_venda, 0);
-  const totalQuantidade = filteredVendas.reduce((sum, venda) => sum + venda.quantidade, 0);
 
   return (
     <div className="p-6 space-y-6 bg-background min-h-screen">
@@ -222,8 +240,11 @@ export default function Vendas() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total Geral</p>
+                <p className="text-sm text-muted-foreground">Participação Geral</p>
                 <p className="text-2xl font-bold text-foreground">
+                  {participacaoGeral.toFixed(1)}%
+                </p>
+                <p className="text-xs text-muted-foreground">
                   R$ {totalGeralVendas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 </p>
               </div>
@@ -236,9 +257,12 @@ export default function Vendas() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total Filtrado</p>
+                <p className="text-sm text-muted-foreground">Ticket Médio</p>
                 <p className="text-2xl font-bold text-foreground">
-                  R$ {totalVendas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                  R$ {ticketMedio.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Por transação
                 </p>
               </div>
               <BarChart3 className="w-8 h-8 text-primary" />
@@ -250,8 +274,11 @@ export default function Vendas() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Quantidade</p>
-                <p className="text-2xl font-bold text-foreground">{totalQuantidade}</p>
+                <p className="text-sm text-muted-foreground">Categorias Ativas</p>
+                <p className="text-2xl font-bold text-foreground">{Object.keys(vendasPorCategoria).length}</p>
+                <p className="text-xs text-muted-foreground">
+                  Com vendas no período
+                </p>
               </div>
               <TrendingUp className="w-8 h-8 text-primary" />
             </div>
@@ -262,14 +289,56 @@ export default function Vendas() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Transações</p>
+                <p className="text-sm text-muted-foreground">Total Transações</p>
                 <p className="text-2xl font-bold text-foreground">{filteredVendas.length}</p>
+                <p className="text-xs text-muted-foreground">
+                  {totalQuantidade} itens vendidos
+                </p>
               </div>
               <Calendar className="w-8 h-8 text-warning" />
             </div>
           </CardContent>
         </Card>
       </div>
+
+      {/* Indicadores por Categoria */}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BarChart3 className="w-5 h-5" />
+            Indicadores por Categoria
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Object.entries(vendasPorCategoria)
+              .sort(([,a], [,b]) => b.valor - a.valor)
+              .slice(0, 6)
+              .map(([categoria, dados]) => {
+                const participacao = valorTotalTodas > 0 ? (dados.valor / valorTotalTodas * 100) : 0;
+                return (
+                  <div key={categoria} className="p-4 border rounded-lg bg-card">
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge className={getCategoriaColor(categoria)} variant="secondary">
+                        {categoria.replace('_', ' ').toUpperCase()}
+                      </Badge>
+                      <span className="text-sm font-medium">{participacao.toFixed(1)}%</span>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-lg font-bold">
+                        R$ {dados.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                      </p>
+                      <div className="flex justify-between text-sm text-muted-foreground">
+                        <span>{dados.transacoes} vendas</span>
+                        <span>{dados.quantidade} itens</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Filters */}
       <Card className="mb-6">
